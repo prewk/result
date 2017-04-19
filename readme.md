@@ -28,3 +28,7 @@ $value = someApiCall()->unwrapOr(null);
 // Throw an exception on error
 $value = someApiCall()->unwrap();
 ```
+
+## License
+
+MIT & Apache 2.0
