@@ -11,4 +11,4 @@ script:
     - composer test
 
 after_script:
-    - travis_retry php vendor/bin/coveralls -v
+    - travis_retry php bin/coveralls -v
