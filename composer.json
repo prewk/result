@@ -1,6 +1,7 @@
 {
+    "version": "0.0.1",
     "name": "prewk/result",
-    "description": "Result object for PHP",
+    "description": "Result object for PHP inspired by Rust",
     "type": "library",
     "license": "(MIT and Apache-2.0)",
     "autoload": {
@@ -8,11 +9,20 @@
             "Prewk\\": "src/"
         }
     },
-      "authors": [
+    "scripts": {
+        "test": "phpspec run"
+    },
+    "config": {
+        "bin-dir": "bin"
+    },
+    "authors": [
         {
             "name": "Oskar Thornblad",
             "email": "oskar.thornblad@gmail.com"
         }
     ],
-    "require": {}
+    "require": {},
+    "require-dev": {
+        "phpspec/phpspec": "^3.2"
+    }
 }

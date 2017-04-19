@@ -22,16 +22,16 @@ class Err implements Result
     /**
      * @var mixed
      */
-    private $value;
+    private $err;
 
     /**
      * Err constructor.
      *
-     * @param mixed $value
+     * @param mixed $err
      */
-    public function __construct($value)
+    public function __construct($err)
     {
-        $this->value = $value;
+        $this->err = $err;
     }
 
     /**
@@ -73,7 +73,7 @@ class Err implements Result
      */
     public function mapErr(Closure $mapper): Result
     {
-        return new self($mapper($this->value));
+        return new self($mapper($this->err));
     }
 
     /**
@@ -129,7 +129,7 @@ class Err implements Result
      */
     public function orElse(Closure $op): Result
     {
-        $result = $op($this->value);
+        $result = $op($this->err);
 
         if (!($result instanceof Result)) {
             throw new ResultException("Op must return a Result");
@@ -157,7 +157,7 @@ class Err implements Result
      */
     public function unwrapOrElse(Closure $op)
     {
-        return $op($this->value);
+        return $op($this->err);
     }
 
     /**
@@ -191,6 +191,6 @@ class Err implements Result
      */
     public function unwrapErr()
     {
-        return $this->value;
+        return $this->err;
     }
 }

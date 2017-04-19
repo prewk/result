@@ -1,0 +1,4 @@
+suites:
+    prewk_suite:
+        namespace: Prewk
+        psr4_prefix: Prewk
