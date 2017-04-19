@@ -1,4 +1,4 @@
-# PHP Result Object
+# PHP Result Object [![Build Status](https://travis-ci.org/prewk/record.svg)](https://travis-ci.org/prewk/record) [![Coverage Status](https://coveralls.io/repos/github/prewk/result/badge.svg?branch=master)](https://coveralls.io/github/prewk/result?branch=master)
 
 A PHP implementation of [Rust's nifty Result type](https://doc.rust-lang.org/std/result/enum.Result.html) with roughly the same API.
 
