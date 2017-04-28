@@ -21,7 +21,7 @@
         }
     ],
     "require": {
-        "prewk/option": "^0.0.3"
+        "prewk/option": "*"
     },
     "require-dev": {
         "phpspec/phpspec": "^3.2",

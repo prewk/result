@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "506802adc27338321447db4a49730b84",
-    "content-hash": "8fc700eb13a7ff0e1b9f4bebaf2156bc",
+    "hash": "a639af1c2c29177270efe4defe112f1a",
+    "content-hash": "9934a7b9e963eed74840d33aaa1d29eb",
     "packages": [
         {
             "name": "prewk/option",
