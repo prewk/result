@@ -3,6 +3,7 @@
 namespace spec\Prewk\Result;
 
 use Exception;
+use Prewk\Option\{Some, None};
 use Prewk\Result\Ok;
 use PhpSpec\ObjectBehavior;
 use Prewk\Result\ResultException;
@@ -118,5 +119,22 @@ class OkSpec extends ObjectBehavior
     {
         $this->beConstructedWith("value");
         $this->shouldThrow(ResultException::class)->during("unwrapErr");
+    }
+
+    function it_converts_into_some_with_ok()
+    {
+        $this->beConstructedWith("value");
+        $option = $this->ok();
+
+        $option->shouldHaveType(Some::class);
+        $option->unwrap()->shouldBe("value");
+    }
+
+    function it_converts_into_none_with_err()
+    {
+        $this->beConstructedWith("value");
+        $option = $this->err();
+
+        $option->shouldHaveType(None::class);
     }
 }

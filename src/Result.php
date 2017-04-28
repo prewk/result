@@ -33,6 +33,20 @@ interface Result
     public function isErr(): bool;
 
     /**
+     * Converts from Result<T, E> to Option<T>, and discarding the error, if any
+     *
+     * @return Option
+     */
+    public function ok(): Option;
+
+    /**
+     * Converts from Result<T, E> to Option<E>, and discarding the value, if any
+     *
+     * @return Option
+     */
+    public function err(): Option;
+
+    /**
      * Maps a Result by applying a function to a contained Ok value, leaving an Err value untouched.
      *
      * @param Closure $mapper

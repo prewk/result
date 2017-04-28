@@ -12,6 +12,8 @@ namespace Prewk\Result;
 
 use Closure;
 use Exception;
+use Prewk\Option;
+use Prewk\Option\{Some, None};
 use Prewk\Result;
 
 /**
@@ -192,5 +194,25 @@ class Ok implements Result
     public function unwrapErr()
     {
         throw new ResultException("Unwrapped with the expecation of Err, but found Ok");
+    }
+
+    /**
+     * Converts from Result<T, E> to Option<T>, and discarding the error, if any
+     *
+     * @return Option
+     */
+    public function ok(): Option
+    {
+        return new Some($this->value);
+    }
+
+    /**
+     * Converts from Result<T, E> to Option<E>, and discarding the value, if any
+     *
+     * @return Option
+     */
+    public function err(): Option
+    {
+        return new None;
     }
 }

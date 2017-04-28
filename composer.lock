@@ -4,9 +4,48 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "be86fdef8a691be4b5713bdfcd9c440a",
-    "content-hash": "6c8d6c5f8cfd110b4c517d19233ce43e",
-    "packages": [],
+    "hash": "506802adc27338321447db4a49730b84",
+    "content-hash": "8fc700eb13a7ff0e1b9f4bebaf2156bc",
+    "packages": [
+        {
+            "name": "prewk/option",
+            "version": "0.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/prewk/option.git",
+                "reference": "687ba3122a600e8854740c00ce6cecdcb64d82a7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/prewk/option/zipball/687ba3122a600e8854740c00ce6cecdcb64d82a7",
+                "reference": "687ba3122a600e8854740c00ce6cecdcb64d82a7",
+                "shasum": ""
+            },
+            "require-dev": {
+                "leanphp/phpspec-code-coverage": "^3.1",
+                "phpspec/phpspec": "^3.2",
+                "satooshi/php-coveralls": "^1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Prewk\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "(MIT and Apache-2.0)"
+            ],
+            "authors": [
+                {
+                    "name": "Oskar Thornblad",
+                    "email": "oskar.thornblad@gmail.com"
+                }
+            ],
+            "description": "Option object for PHP inspired by Rust",
+            "time": "2017-04-28 14:22:37"
+        }
+    ],
     "packages-dev": [
         {
             "name": "doctrine/instantiator",

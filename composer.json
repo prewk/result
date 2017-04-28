@@ -20,7 +20,9 @@
             "email": "oskar.thornblad@gmail.com"
         }
     ],
-    "require": {},
+    "require": {
+        "prewk/option": "^0.0.3"
+    },
     "require-dev": {
         "phpspec/phpspec": "^3.2",
         "leanphp/phpspec-code-coverage": "^3.1",
