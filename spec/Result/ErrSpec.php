@@ -3,6 +3,7 @@
 namespace spec\Prewk\Result;
 
 use Exception;
+use Prewk\Option\{Some, None};
 use Prewk\Result\Err;
 use PhpSpec\ObjectBehavior;
 use Prewk\Result\Ok;
@@ -121,5 +122,22 @@ class ErrSpec extends ObjectBehavior
     {
         $this->beConstructedWith("error");
         $this->unwrapErr()->shouldBe("error");
+    }
+
+    function it_converts_into_none_with_ok()
+    {
+        $this->beConstructedWith("error");
+        $option = $this->ok();
+
+        $option->shouldHaveType(None::class);
+    }
+
+    function it_converts_into_some_with_err()
+    {
+        $this->beConstructedWith("error");
+        $option = $this->err();
+
+        $option->shouldHaveType(Some::class);
+        $option->unwrap()->shouldBe("error");
     }
 }
