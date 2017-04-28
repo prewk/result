@@ -1,5 +1,4 @@
 {
-    "version": "0.0.1",
     "name": "prewk/result",
     "description": "Result object for PHP inspired by Rust",
     "type": "library",

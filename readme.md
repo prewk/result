@@ -11,6 +11,7 @@ composer require prewk/result
 ## Usage
 
 ```
+use Prewk\Result;
 use Prewk\Result\{Ok, Err};
 
 function someApiCall(): Result {

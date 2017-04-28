@@ -70,7 +70,7 @@ class OkSpec extends ObjectBehavior
         })->shouldBe($otherResult);
     }
 
-    function it_throws_if_andThen_closure_return_type_mismatch()
+    function it_throws_on_andThen_closure_return_type_mismatch()
     {
         $this->beConstructedWith("foo");
         $this->shouldThrow(ResultException::class)->during("andThen", [function() {

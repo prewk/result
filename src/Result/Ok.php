@@ -29,7 +29,8 @@ class Ok implements Result
      *
      * @param mixed $value
      */
-    public function __construct($value) {
+    public function __construct($value)
+    {
         $this->value = $value;
     }
 
@@ -173,7 +174,7 @@ class Ok implements Result
     /**
      * Unwraps a result, yielding the content of an Ok.
      *
-     * @throws the message if the value is an Err.
+     * @throws Exception (the message) if the value is an Err.
      * @param Exception $msg
      * @return mixed
      */

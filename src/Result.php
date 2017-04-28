@@ -48,7 +48,6 @@ interface Result
      */
     public function mapErr(Closure $mapper): Result;
 
-
     /**
      * Returns an iterator over the possibly contained value.
      * The iterator yields one value if the result is Ok, otherwise none.
@@ -92,7 +91,7 @@ interface Result
     /**
      * Unwraps a result, yielding the content of an Ok. Else, it returns optb.
      *
-     * @param $optb
+     * @param mixed $optb
      * @return mixed
      */
     public function unwrapOr($optb);
