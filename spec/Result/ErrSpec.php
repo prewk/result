@@ -105,10 +105,17 @@ class ErrSpec extends ObjectBehavior
         })->shouldBe("non-error");
     }
 
-    function it_throws_on_unwrap()
+    function it_throws_ResultException_on_unwrapping_non_exceptions()
     {
         $this->beConstructedWith("error");
         $this->shouldThrow(ResultException::class)->during("unwrap");
+    }
+
+    function it_throws_the_err_on_unwrapping_exception()
+    {
+        $e = new Exception("error");
+        $this->beConstructedWith($e);
+        $this->shouldThrow($e)->during("unwrap");
     }
 
     function it_throws_on_expect()

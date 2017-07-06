@@ -165,12 +165,17 @@ class Err implements Result
     /**
      * Unwraps a result, yielding the content of an Ok.
      *
-     * @throws ResultException if the value is an Err.
+     * @throws Exception|ResultException If the value is an Err, unwrapping will throw it if it's an exception
+     *                                   or ResultException if it is not.
      * @return mixed
      */
     public function unwrap()
     {
-        throw new ResultException("Unwrapped an Err");
+        if ($this->err instanceof Exception) {
+            throw $this->err;
+        } else {
+            throw new ResultException("Unwrapped an Err");
+        }
     }
 
     /**
