@@ -21,7 +21,8 @@
         }
     ],
     "require": {
-        "prewk/option": "*"
+        "prewk/option": "*",
+        "php": ">=7.0"
     },
     "require-dev": {
         "phpspec/phpspec": "^3.2",
