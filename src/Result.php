@@ -142,4 +142,12 @@ interface Result
      * @return mixed
      */
     public function unwrapErr();
+
+    /**
+     * Applies values inside the given Results to the function in this Result.
+     *
+     * @param Result[] ...$args Results to apply the function to.
+     * @return Result
+     */
+    public function apply(Result ...$args): Result;
 }

@@ -197,6 +197,29 @@ class Ok implements Result
     }
 
     /**
+     * Applies values inside the given Results to the function in this Result.
+     *
+     * @param Result[] ...$args Results to apply the function to.
+     * @return Result
+     */
+    public function apply(Result ...$args): Result
+    {
+        if (!is_callable($this->value)) {
+            throw new ResultException("Tried to apply a non-callable to arguments");
+        }
+        return array_reduce($args, function(Result $final, Result $result) {
+            return $final->andThen(function(array $array) use ($result) {
+                return $result->map(function($x) use ($array) {
+                    array_push($array, $x);
+                    return $array;
+                });
+            });
+        }, new static([]))->map(function(array $argArray) {
+            return call_user_func_array($this->value, $argArray);
+        });
+    }
+
+    /**
      * Converts from Result<T, E> to Option<T>, and discarding the error, if any
      *
      * @return Option

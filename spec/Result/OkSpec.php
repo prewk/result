@@ -4,7 +4,7 @@ namespace spec\Prewk\Result;
 
 use Exception;
 use Prewk\Option\{Some, None};
-use Prewk\Result\Ok;
+use Prewk\Result\{Ok, Err};
 use PhpSpec\ObjectBehavior;
 use Prewk\Result\ResultException;
 
@@ -136,5 +136,36 @@ class OkSpec extends ObjectBehavior
         $option = $this->err();
 
         $option->shouldHaveType(None::class);
+    }
+
+    function it_can_apply_argument_to_function()
+    {
+        $this->beConstructedWith(function($one) {
+            return $one;
+        });
+        $arg = new Ok(13);
+        $this->apply($arg)->unwrap()->shouldBe(13);
+    }
+    
+    function it_can_apply_multiple_arguments_to_function()
+    {
+        $this->beConstructedWith(function($x, $y, $z) {
+            return $x + $y + $z;
+        });
+        $this->apply(new Ok(1), new Ok(2), new Ok(3))->unwrap()->shouldBe(6);
+    }
+
+    function it_returns_err_when_one_of_args_is_err()
+    {
+        $this->beConstructedWith(function($x, $y, $z) {
+            return $x + $y + $z;
+        });
+        $this->apply(new Ok(1), new Ok(2), new Err(3))->isErr()->shouldBe(true);
+    }
+
+    function it_throws_if_non_callable_value_is_applied_to_arguments()
+    {
+        $this->beConstructedWith(1);
+        $this->shouldThrow(ResultException::class)->during("apply");
     }
 }

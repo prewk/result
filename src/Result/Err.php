@@ -200,6 +200,17 @@ class Err implements Result
     {
         return $this->err;
     }
+    
+    /**
+     * Applies values inside the given Results to the function in this Result.
+     *
+     * @param Result[] ...$args Results to apply the function to.
+     * @return Result
+     */
+    public function apply(Result ...$args): Result
+    {
+        return $this;
+    }
 
     /**
      * Converts from Result<T, E> to Option<T>, and discarding the error, if any
