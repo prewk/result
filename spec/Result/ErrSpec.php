@@ -147,4 +147,10 @@ class ErrSpec extends ObjectBehavior
         $option->shouldHaveType(Some::class);
         $option->unwrap()->shouldBe("error");
     }
+
+    function it_does_not_apply_args_in_an_err()
+    {
+        $this->beConstructedWith("error");
+        $this->apply(new Ok(123))->isErr()->shouldBe(true);
+    }
 }
