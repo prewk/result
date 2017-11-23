@@ -4,7 +4,7 @@ namespace spec\Prewk\Result;
 
 use Exception;
 use Prewk\Option\{Some, None};
-use Prewk\Result\Ok;
+use Prewk\Result\{Ok, Err};
 use PhpSpec\ObjectBehavior;
 use Prewk\Result\ResultException;
 
@@ -153,5 +153,13 @@ class OkSpec extends ObjectBehavior
             return $x + $y + $z;
         });
         $this->apply(new Ok(1), new Ok(2), new Ok(3))->unwrap()->shouldBe(6);
+    }
+
+    function it_returns_err_when_one_of_args_is_err()
+    {
+        $this->beConstructedWith(function($x, $y, $z) {
+            return $x + $y + $z;
+        });
+        $this->apply(new Ok(1), new Ok(2), new Err(3))->isErr()->shouldBe(true);
     }
 }
