@@ -201,17 +201,17 @@ class Ok implements Result
      *
      * @return Result
      */
-    public function apply(): Result
+    public function apply(...$args): Result
     {
-        return array_reduce(func_get_args(), function($final, $result) {
+        return array_reduce($args, function($final, $result) {
             return $final->andThen(function($array) use ($result) {
                 return $result->map(function($x) use ($array) {
                     array_push($array, $x);
                     return $array;
                 });
             });
-        }, new static([]))->map(function($args) {
-            return call_user_func_array($this->value, $args);
+        }, new static([]))->map(function($argArray) {
+            return call_user_func_array($this->value, $argArray);
         });
     }
 
