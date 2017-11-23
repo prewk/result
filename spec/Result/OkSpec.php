@@ -162,4 +162,10 @@ class OkSpec extends ObjectBehavior
         });
         $this->apply(new Ok(1), new Ok(2), new Err(3))->isErr()->shouldBe(true);
     }
+
+    function it_throws_if_non_callable_value_is_applied_to_arguments()
+    {
+        $this->beConstructedWith(1);
+        $this->shouldThrow(ResultException::class)->during("apply");
+    }
 }
