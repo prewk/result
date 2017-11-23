@@ -197,6 +197,25 @@ class Ok implements Result
     }
 
     /**
+     * Applies values inside the given Results to the function in this Result.
+     *
+     * @return Result
+     */
+    public function apply(): Result
+    {
+        return array_reduce(func_get_args(), function($final, $result) {
+            return $final->andThen(function($array) use ($result) {
+                return $result->map(function($x) use ($array) {
+                    array_push($array, $x);
+                    return $array;
+                });
+            });
+        }, new static([]))->map(function($args) {
+            return call_user_func_array($this->value, $args);
+        });
+    }
+
+    /**
      * Converts from Result<T, E> to Option<T>, and discarding the error, if any
      *
      * @return Option

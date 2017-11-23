@@ -142,4 +142,11 @@ interface Result
      * @return mixed
      */
     public function unwrapErr();
+
+    /**
+     * Applies values inside the given Results to the function in this Result.
+     *
+     * @return Result
+     */
+    public function apply(): Result;
 }
