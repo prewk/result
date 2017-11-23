@@ -137,4 +137,21 @@ class OkSpec extends ObjectBehavior
 
         $option->shouldHaveType(None::class);
     }
+
+    function it_can_apply_argument_to_function()
+    {
+        $this->beConstructedWith(function($one) {
+            return $one;
+        });
+        $arg = new Ok(13);
+        $this->apply($arg)->unwrap()->shouldBe(13);
+    }
+    
+    function it_can_apply_multiple_arguments_to_function()
+    {
+        $this->beConstructedWith(function($x, $y, $z) {
+            return $x + $y + $z;
+        });
+        $this->apply(new Ok(1), new Ok(2), new Ok(3))->unwrap()->shouldBe(6);
+    }
 }
