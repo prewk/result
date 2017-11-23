@@ -203,6 +203,9 @@ class Ok implements Result
      */
     public function apply(...$args): Result
     {
+        if (!is_callable($this->value)) {
+            throw new ResultException("Tried to apply a non-callable to arguments");
+        }
         return array_reduce($args, function($final, $result) {
             return $final->andThen(function($array) use ($result) {
                 return $result->map(function($x) use ($array) {
