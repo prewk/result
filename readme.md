@@ -11,7 +11,6 @@ composer require prewk/result
 ## Overview
 
 ```php
-<?php
 use Prewk\Result;
 use Prewk\Result\{Ok, Err};
 
@@ -50,7 +49,6 @@ $value = someApiCall()->expect(new Exception("Oh noes!"));
 Optional global helper functions exist to simplify result object construction:
 
 ```php
-<?php
 ok(); // new Prewk\Result\Ok(null);
 ok($val); // new Prewk\Result\Ok($val);
 err($e); // new Prewk\Result\Err($e);
@@ -80,7 +78,6 @@ If an Err containing an `Exception` is unwrapped, that Exception will be thrown.
 If all results are Ok, give them to the contained callable value as arguments and put the callable's returned value in a new Ok. If any result is an Err, return the first Err.
 
 ```php
-<?php
 $sum = function(int $foo, int $bar): int
 {
 	return $foo + bar;
@@ -96,7 +93,6 @@ ok($sum)->apply(ok(100), ok(200), err(new Exception)); // Err<Exception>
 The `with` method will include the variadically added arguments in consecutive closures (`map`, `andThen`, etc). [This is useful when chaining dependent ops](https://github.com/prewk/result/pull/3).
 
 ```php
-<?php
 ok($foo)->with($bar, $baz)
 	->map(function($foo, $bar $baz) {
 		return $foo . $bar . $baz;
