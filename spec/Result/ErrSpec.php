@@ -153,4 +153,25 @@ class ErrSpec extends ObjectBehavior
         $this->beConstructedWith("error");
         $this->apply(new Ok(123))->isErr()->shouldBe(true);
     }
+
+    function it_mapErrs_with_pass_args()
+    {
+        $this->beConstructedWith("foo", "bar", "baz");
+        $result = $this->mapErr(function($foo, $bar, $baz) {
+            return $foo . $bar . $baz;
+        });
+
+        $result->shouldHaveType(Err::class);
+        $result->unwrapErr()->shouldBe("foobarbaz");
+    }
+
+    function it_orElses_with_pass_args()
+    {
+        $this->beConstructedWith("foo", "bar", "baz");
+        $result = $this->orElse(function($foo, $bar, $baz) {
+            return new Err($foo . $bar . $baz);
+        });
+
+        $result->unwrapErr()->shouldBe("foobarbaz");
+    }
 }
