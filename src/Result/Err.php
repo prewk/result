@@ -27,13 +27,20 @@ class Err implements Result
     private $err;
 
     /**
+     * @var array
+     */
+    private $pass;
+
+    /**
      * Err constructor.
      *
      * @param mixed $err
+     * @param array ...$pass
      */
-    public function __construct($err)
+    public function __construct($err, ...$pass)
     {
         $this->err = $err;
+        $this->pass = $pass;
     }
 
     /**
@@ -75,7 +82,7 @@ class Err implements Result
      */
     public function mapErr(Closure $mapper): Result
     {
-        return new self($mapper($this->err));
+        return new self($mapper($this->err, ...$this->pass));
     }
 
     /**
@@ -131,7 +138,7 @@ class Err implements Result
      */
     public function orElse(Closure $op): Result
     {
-        $result = $op($this->err);
+        $result = $op($this->err, ...$this->pass);
 
         if (!($result instanceof Result)) {
             throw new ResultException("Op must return a Result");
@@ -159,7 +166,7 @@ class Err implements Result
      */
     public function unwrapOrElse(Closure $op)
     {
-        return $op($this->err);
+        return $op($this->err, ...$this->pass);
     }
 
     /**
@@ -230,5 +237,18 @@ class Err implements Result
     public function err(): Option
     {
         return new Some($this->err);
+    }
+
+    /**
+     * The attached pass-through args will be unpacked into extra args into chained closures
+     *
+     * @param array ...$args
+     * @return Result
+     */
+    public function with(...$args): Result
+    {
+        $this->pass = $args;
+
+        return $this;
     }
 }

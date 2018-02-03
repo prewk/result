@@ -168,4 +168,37 @@ class OkSpec extends ObjectBehavior
         $this->beConstructedWith(1);
         $this->shouldThrow(ResultException::class)->during("apply");
     }
+
+    function it_maps_with_pass_args()
+    {
+        $this->beConstructedWith("foo", "bar", "baz");
+        $result = $this->map(function($foo, $bar, $baz) {
+            return $foo . $bar . $baz;
+        });
+
+        $result->shouldHaveType(Ok::class);
+        $result->unwrap()->shouldBe("foobarbaz");
+    }
+
+    function it_andThens_with_pass_args()
+    {
+        $this->beConstructedWith("foo", "bar", "baz");
+        $result = $this->andThen(function($foo, $bar, $baz) {
+            return new Ok($foo . $bar . $baz);
+        });
+
+        $result->unwrap()->shouldBe("foobarbaz");
+    }
+
+    function its_with_method_adds_args()
+    {
+        $this->beConstructedWith("foo");
+        $this->with("bar", "baz");
+
+        $result = $this->andThen(function($foo, $bar, $baz) {
+            return new Ok($foo . $bar . $baz);
+        });
+
+        $result->unwrap()->shouldBe("foobarbaz");
+    }
 }

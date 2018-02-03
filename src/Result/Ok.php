@@ -27,13 +27,20 @@ class Ok implements Result
     private $value;
 
     /**
+     * @var array
+     */
+    private $pass;
+
+    /**
      * Ok constructor.
      *
      * @param mixed $value
+     * @param array ...$pass
      */
-    public function __construct($value)
+    public function __construct($value, ...$pass)
     {
         $this->value = $value;
+        $this->pass = $pass;
     }
 
     /**
@@ -64,7 +71,7 @@ class Ok implements Result
      */
     public function map(Closure $mapper): Result
     {
-        return new self($mapper($this->value));
+        return new self($mapper($this->value, ...$this->pass));
     }
 
     /**
@@ -109,7 +116,7 @@ class Ok implements Result
      */
     public function andThen(Closure $op): Result
     {
-        $result = $op($this->value);
+        $result = $op($this->value, ...$this->pass);
 
         if (!($result instanceof Result)) {
             throw new ResultException("Op must return a Result");
@@ -237,5 +244,18 @@ class Ok implements Result
     public function err(): Option
     {
         return new None;
+    }
+
+    /**
+     * The attached pass-through args will be unpacked into extra args into chained closures
+     *
+     * @param array ...$args
+     * @return Result
+     */
+    public function with(...$args): Result
+    {
+        $this->pass = $args;
+
+        return $this;
     }
 }
