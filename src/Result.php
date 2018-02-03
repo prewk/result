@@ -150,4 +150,12 @@ interface Result
      * @return Result
      */
     public function apply(Result ...$args): Result;
+
+    /**
+     * The attached pass-through args will be unpacked into extra args into chained closures
+     *
+     * @param array ...$args
+     * @return Result
+     */
+    public function with(...$args): Result;
 }

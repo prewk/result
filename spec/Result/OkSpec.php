@@ -189,4 +189,16 @@ class OkSpec extends ObjectBehavior
 
         $result->unwrap()->shouldBe("foobarbaz");
     }
+
+    function its_with_method_adds_args()
+    {
+        $this->beConstructedWith("foo");
+        $this->with("bar", "baz");
+
+        $result = $this->andThen(function($foo, $bar, $baz) {
+            return new Ok($foo . $bar . $baz);
+        });
+
+        $result->unwrap()->shouldBe("foobarbaz");
+    }
 }

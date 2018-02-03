@@ -174,4 +174,16 @@ class ErrSpec extends ObjectBehavior
 
         $result->unwrapErr()->shouldBe("foobarbaz");
     }
+
+    function its_with_method_adds_args()
+    {
+        $this->beConstructedWith("foo");
+        $this->with("bar", "baz");
+
+        $result = $this->orElse(function($foo, $bar, $baz) {
+            return new Err($foo . $bar . $baz);
+        });
+
+        $result->unwrapErr()->shouldBe("foobarbaz");
+    }
 }

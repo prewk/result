@@ -238,4 +238,17 @@ class Err implements Result
     {
         return new Some($this->err);
     }
+
+    /**
+     * The attached pass-through args will be unpacked into extra args into chained closures
+     *
+     * @param array ...$args
+     * @return Result
+     */
+    public function with(...$args): Result
+    {
+        $this->pass = $args;
+
+        return $this;
+    }
 }
