@@ -107,7 +107,7 @@ ok($foo)->with($bar, $baz)
 
 Note that `or` and `and` will be evaluated immediately:
 
-```
+```php
 // This will call all three api calls regardless of successes/errors
 $this
 	->apiCall()
