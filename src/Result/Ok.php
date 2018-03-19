@@ -18,11 +18,20 @@ use Prewk\Result;
 
 /**
  * Ok
+ *
+ * @template T
+ * The Ok value
+ *
+ * @template E
+ * The Err value
+ *
+ * @inherits Result<T, E>
  */
-class Ok implements Result
+class Ok extends Result
 {
     /**
      * @var mixed
+     * @psalm-var T
      */
     private $value;
 
@@ -35,6 +44,7 @@ class Ok implements Result
      * Ok constructor.
      *
      * @param mixed $value
+     * @psalm-param T $value
      * @param array ...$pass
      */
     public function __construct($value, ...$pass)
@@ -90,6 +100,7 @@ class Ok implements Result
      * The iterator yields one value if the result is Ok, otherwise none.
      *
      * @return array
+     * @psalm-return array<int, mixed>
      */
     public function iter(): array
     {
@@ -152,6 +163,7 @@ class Ok implements Result
      *
      * @param $optb
      * @return mixed
+     * @psalm-return T|mixed
      */
     public function unwrapOr($optb)
     {
@@ -163,6 +175,7 @@ class Ok implements Result
      *
      * @param Closure $op
      * @return mixed
+     * @psalm-return T|mixed
      */
     public function unwrapOrElse(Closure $op)
     {
@@ -174,6 +187,7 @@ class Ok implements Result
      *
      * @throws if the value is an Err.
      * @return mixed
+     * @psalm-return T
      */
     public function unwrap()
     {
@@ -186,6 +200,7 @@ class Ok implements Result
      * @throws Exception (the message) if the value is an Err.
      * @param Exception $msg
      * @return mixed
+     * @psalm-return T
      */
     public function expect(Exception $msg)
     {
@@ -197,6 +212,7 @@ class Ok implements Result
      *
      * @throws ResultException if the value is an Ok.
      * @return mixed
+     * @psalm-return E
      */
     public function unwrapErr()
     {
@@ -206,30 +222,36 @@ class Ok implements Result
     /**
      * Applies values inside the given Results to the function in this Result.
      *
-     * @param Result[] ...$args Results to apply the function to.
+     * @param Result[] ...$inArgs Results to apply the function to.
+     * @psalm-param Result ...$inArgs
      * @return Result
+     * @throws ResultException
+     * @psalm-suppress MissingClosureParamType
      */
-    public function apply(Result ...$args): Result
+    public function apply(Result ...$inArgs): Result
     {
         if (!is_callable($this->value)) {
             throw new ResultException("Tried to apply a non-callable to arguments");
         }
-        return array_reduce($args, function(Result $final, Result $result) {
-            return $final->andThen(function(array $array) use ($result) {
-                return $result->map(function($x) use ($array) {
-                    array_push($array, $x);
-                    return $array;
+
+        return array_reduce($inArgs, function(Result $final, Result $argResult): Result {
+            return $final->andThen(function(array $outArgs) use ($argResult): Result {
+                return $argResult->map(function($unwrappedArg) use ($outArgs): array {
+                    $outArgs[] = $unwrappedArg;
+                    return $outArgs;
                 });
             });
-        }, new static([]))->map(function(array $argArray) {
-            return call_user_func_array($this->value, $argArray);
-        });
+        }, new static([]))
+            ->map(function(array $argArray) {
+                return call_user_func_array($this->value, $argArray);
+            });
     }
 
     /**
      * Converts from Result<T, E> to Option<T>, and discarding the error, if any
      *
      * @return Option
+     * @psalm-return Option<mixed>
      */
     public function ok(): Option
     {
@@ -240,6 +262,7 @@ class Ok implements Result
      * Converts from Result<T, E> to Option<E>, and discarding the value, if any
      *
      * @return Option
+     * @psalm-return Option<mixed>
      */
     public function err(): Option
     {
