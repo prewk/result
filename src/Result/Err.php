@@ -18,11 +18,20 @@ use Prewk\Result;
 
 /**
  * Err
+ *
+ * @template T
+ * The Ok value
+ *
+ * @template E
+ * The Err value
+ *
+ * @inherits Result<T, E>
  */
-class Err implements Result
+class Err extends Result
 {
     /**
      * @var mixed
+     * @psalm-var E
      */
     private $err;
 
@@ -35,6 +44,7 @@ class Err implements Result
      * Err constructor.
      *
      * @param mixed $err
+     * @psalm-param E $err
      * @param array ...$pass
      */
     public function __construct($err, ...$pass)
@@ -90,6 +100,7 @@ class Err implements Result
      * The iterator yields one value if the result is Ok, otherwise none.
      *
      * @return array
+     * @psalm-return array<int, mixed>
      */
     public function iter(): array
     {
@@ -152,6 +163,7 @@ class Err implements Result
      *
      * @param $optb
      * @return mixed
+     * @psalm-return T|mixed
      */
     public function unwrapOr($optb)
     {
@@ -163,6 +175,7 @@ class Err implements Result
      *
      * @param Closure $op
      * @return mixed
+     * @psalm-return T|mixed
      */
     public function unwrapOrElse(Closure $op)
     {
@@ -175,6 +188,7 @@ class Err implements Result
      * @throws Exception|ResultException If the value is an Err, unwrapping will throw it if it's an exception
      *                                   or ResultException if it is not.
      * @return mixed
+     * @psalm-return T
      */
     public function unwrap()
     {
@@ -189,8 +203,9 @@ class Err implements Result
      * Unwraps a result, yielding the content of an Ok.
      *
      * @param Exception $msg
-     * @return mixed message if the value is an Err.
-     * @throws Exception
+     * @return mixed
+     * @psalm-return T
+     * @throws Exception the message if the value is an Err.
      */
     public function expect(Exception $msg)
     {
@@ -202,6 +217,7 @@ class Err implements Result
      *
      * @throws if the value is an Ok.
      * @return mixed
+     * @psalm-return E
      */
     public function unwrapErr()
     {
@@ -211,10 +227,11 @@ class Err implements Result
     /**
      * Applies values inside the given Results to the function in this Result.
      *
-     * @param Result[] ...$args Results to apply the function to.
+     * @param Result[] ...$inArgs Results to apply the function to.
+     * @psalm-param Result ...$inArgs
      * @return Result
      */
-    public function apply(Result ...$args): Result
+    public function apply(Result ...$inArgs): Result
     {
         return $this;
     }
@@ -223,6 +240,7 @@ class Err implements Result
      * Converts from Result<T, E> to Option<T>, and discarding the error, if any
      *
      * @return Option
+     * @psalm-return Option<mixed>
      */
     public function ok(): Option
     {
@@ -233,6 +251,7 @@ class Err implements Result
      * Converts from Result<T, E> to Option<E>, and discarding the value, if any
      *
      * @return Option
+     * @psalm-return Option<mixed>
      */
     public function err(): Option
     {

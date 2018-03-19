@@ -15,36 +15,44 @@ use Exception;
 
 /**
  * Describes a Result
+ *
+ * @template T
+ * The Ok value
+ *
+ * @template E
+ * The Err value
  */
-interface Result
+abstract class Result
 {
     /**
      * Returns true if the result is Ok.
      *
      * @return bool
      */
-    public function isOk(): bool;
+    abstract public function isOk(): bool;
 
     /**
      * Returns true if the result is Err.
      *
      * @return bool
      */
-    public function isErr(): bool;
+    abstract public function isErr(): bool;
 
     /**
      * Converts from Result<T, E> to Option<T>, and discarding the error, if any
      *
      * @return Option
+     * @psalm-return Option<T>
      */
-    public function ok(): Option;
+    abstract public function ok(): Option;
 
     /**
      * Converts from Result<T, E> to Option<E>, and discarding the value, if any
      *
      * @return Option
+     * @psalm-return Option<E>
      */
-    public function err(): Option;
+    abstract public function err(): Option;
 
     /**
      * Maps a Result by applying a function to a contained Ok value, leaving an Err value untouched.
@@ -52,7 +60,7 @@ interface Result
      * @param Closure $mapper
      * @return Result
      */
-    public function map(Closure $mapper): Result;
+    abstract public function map(Closure $mapper): Result;
 
     /**
      * Maps a Result by applying a function to a contained Err value, leaving an Ok value untouched.
@@ -60,15 +68,16 @@ interface Result
      * @param Closure $mapper
      * @return Result
      */
-    public function mapErr(Closure $mapper): Result;
+    abstract public function mapErr(Closure $mapper): Result;
 
     /**
      * Returns an iterator over the possibly contained value.
      * The iterator yields one value if the result is Ok, otherwise none.
      *
      * @return array
+     * @psalm-return array<int, mixed>
      */
-    public function iter(): array;
+    abstract public function iter(): array;
 
     /**
      * Returns res if the result is Ok, otherwise returns the Err value of self.
@@ -76,7 +85,7 @@ interface Result
      * @param Result $res
      * @return Result
      */
-    public function and(Result $res): Result;
+    abstract public function and(Result $res): Result;
 
     /**
      * Calls op if the result is Ok, otherwise returns the Err value of self.
@@ -84,7 +93,7 @@ interface Result
      * @param Closure $op
      * @return Result
      */
-    public function andThen(Closure $op): Result;
+    abstract public function andThen(Closure $op): Result;
 
     /**
      * Returns res if the result is Err, otherwise returns the Ok value of self.
@@ -92,7 +101,7 @@ interface Result
      * @param Result $res
      * @return Result
      */
-    public function or(Result $res): Result;
+    abstract public function or(Result $res): Result;
 
     /**
      * Calls op if the result is Err, otherwise returns the Ok value of self.
@@ -100,31 +109,34 @@ interface Result
      * @param Closure $op
      * @return Result
      */
-    public function orElse(Closure $op): Result;
+    abstract public function orElse(Closure $op): Result;
 
     /**
      * Unwraps a result, yielding the content of an Ok. Else, it returns optb.
      *
      * @param mixed $optb
      * @return mixed
+     * @psalm-return T|mixed
      */
-    public function unwrapOr($optb);
+    abstract public function unwrapOr($optb);
 
     /**
      * Unwraps a result, yielding the content of an Ok. If the value is an Err then it calls op with its value.
      *
      * @param Closure $op
      * @return mixed
+     * @psalm-return T|mixed
      */
-    public function unwrapOrElse(Closure $op);
+    abstract public function unwrapOrElse(Closure $op);
 
     /**
      * Unwraps a result, yielding the content of an Ok.
      *
      * @throws if the value is an Err.
      * @return mixed
+     * @psalm-return T
      */
-    public function unwrap();
+    abstract public function unwrap();
 
     /**
      * Unwraps a result, yielding the content of an Ok.
@@ -132,24 +144,27 @@ interface Result
      * @throws the message if the value is an Err.
      * @param Exception $msg
      * @return mixed
+     * @psalm-return T
      */
-    public function expect(Exception $msg);
+    abstract public function expect(Exception $msg);
 
     /**
      * Unwraps a result, yielding the content of an Err.
      *
      * @throws if the value is an Ok.
      * @return mixed
+     * @psalm-return E
      */
-    public function unwrapErr();
+    abstract public function unwrapErr();
 
     /**
      * Applies values inside the given Results to the function in this Result.
      *
-     * @param Result[] ...$args Results to apply the function to.
+     * @param Result[] ...$inArgs Results to apply the function to.
+     * @psalm-param Result ...$inArgs
      * @return Result
      */
-    public function apply(Result ...$args): Result;
+    abstract public function apply(Result ...$inArgs): Result;
 
     /**
      * The attached pass-through args will be unpacked into extra args into chained closures
@@ -157,5 +172,5 @@ interface Result
      * @param array ...$args
      * @return Result
      */
-    public function with(...$args): Result;
+    abstract public function with(...$args): Result;
 }

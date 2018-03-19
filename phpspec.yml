@@ -3,10 +3,10 @@ suites:
         namespace: Prewk
         psr4_prefix: Prewk
 extensions:
-  LeanPHP\PhpSpec\CodeCoverage\CodeCoverageExtension:
-    format:
-      - clover
-    output:
-      clover: build/logs/clover.xml
-    whitelist:
-      - src
+    LeanPHP\PhpSpec\CodeCoverage\CodeCoverageExtension:
+        format:
+            - clover
+        output:
+            clover: build/logs/clover.xml
+        whitelist:
+            - src
