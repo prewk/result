@@ -12,6 +12,7 @@ namespace Prewk;
 
 use Closure;
 use Exception;
+use Prewk\Result\ResultException;
 
 /**
  * Describes a Result
@@ -132,7 +133,7 @@ abstract class Result
     /**
      * Unwraps a result, yielding the content of an Ok.
      *
-     * @throws if the value is an Err.
+     * @throws Exception if the value is an Err.
      * @return mixed
      * @psalm-return T
      */
@@ -141,7 +142,7 @@ abstract class Result
     /**
      * Unwraps a result, yielding the content of an Ok.
      *
-     * @throws the message if the value is an Err.
+     * @throws Exception the message if the value is an Err.
      * @param Exception $msg
      * @return mixed
      * @psalm-return T
@@ -151,7 +152,7 @@ abstract class Result
     /**
      * Unwraps a result, yielding the content of an Err.
      *
-     * @throws if the value is an Ok.
+     * @throws ResultException if the value is an Ok.
      * @return mixed
      * @psalm-return E
      */
