@@ -94,7 +94,7 @@ The `with` method will include the variadically added arguments in consecutive c
 
 ```php
 ok($foo)->with($bar, $baz)
-	->map(function($foo, $bar $baz) {
+	->map(function($foo, $bar, $baz) {
 		return $foo . $bar . $baz;
 	});
 ```
