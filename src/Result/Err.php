@@ -187,8 +187,8 @@ class Err extends Result
      *
      * @throws Exception|ResultException If the value is an Err, unwrapping will throw it if it's an exception
      *                                   or ResultException if it is not.
-     * @return mixed
-     * @psalm-return T
+     * @return void
+     * @psalm-return no-return
      */
     public function unwrap()
     {
@@ -223,7 +223,7 @@ class Err extends Result
     {
         return $this->err;
     }
-    
+
     /**
      * Applies values inside the given Results to the function in this Result.
      *
