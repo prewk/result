@@ -235,15 +235,15 @@ class Ok extends Result
             throw new ResultException("Tried to apply a non-callable to arguments");
         }
 
-        return array_reduce($inArgs, function(Result $final, Result $argResult): Result {
-            return $final->andThen(function(array $outArgs) use ($argResult): Result {
-                return $argResult->map(function($unwrappedArg) use ($outArgs): array {
+        return array_reduce($inArgs, function (Result $final, Result $argResult): Result {
+            return $final->andThen(function (array $outArgs) use ($argResult): Result {
+                return $argResult->map(function ($unwrappedArg) use ($outArgs): array {
                     $outArgs[] = $unwrappedArg;
                     return $outArgs;
                 });
             });
         }, new static([]))
-            ->map(function(array $argArray) {
+            ->map(function (array $argArray) {
                 return call_user_func_array($this->value, $argArray);
             });
     }
