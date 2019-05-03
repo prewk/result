@@ -227,6 +227,7 @@ class Ok extends Result
      * @return Result
      * @throws ResultException
      * @psalm-suppress MissingClosureParamType
+     * @psalm-suppress MissingClosureReturnType
      */
     public function apply(Result ...$inArgs): Result
     {
