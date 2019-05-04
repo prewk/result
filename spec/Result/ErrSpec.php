@@ -32,13 +32,13 @@ class ErrSpec extends ObjectBehavior
     function it_doesnt_map()
     {
         $this->beConstructedWith("error");
-        $this->map(function() {})->shouldBe($this);
+        $this->map(function () {})->shouldBe($this);
     }
 
     function it_mapErrs()
     {
         $this->beConstructedWith("foo");
-        $result = $this->mapErr(function($err) {
+        $result = $this->mapErr(function ($err) {
             return $err . "bar";
         });
 
@@ -61,7 +61,7 @@ class ErrSpec extends ObjectBehavior
     function it_shouldnt_andThen()
     {
         $this->beConstructedWith("error");
-        $this->andThen(function() {})->shouldReturn($this);
+        $this->andThen(function () {})->shouldReturn($this);
     }
 
     function it_should_or()
@@ -77,7 +77,7 @@ class ErrSpec extends ObjectBehavior
         $otherValue = null;
 
         $this->beConstructedWith("error");
-        $this->orElse(function($err) use (&$otherValue) {
+        $this->orElse(function ($err) use (&$otherValue) {
             $otherValue = new Err($err . "rorre");
             return $otherValue;
         })->shouldBe($otherValue);
@@ -86,9 +86,11 @@ class ErrSpec extends ObjectBehavior
     function it_throws_if_orElse_closure_return_type_mismatch()
     {
         $this->beConstructedWith("error");
-        $this->shouldThrow(ResultException::class)->during("orElse", [function() {
-            return "Not a result";
-        }]);
+        $this->shouldThrow(ResultException::class)->during("orElse", [
+            function () {
+                return "Not a result";
+            }
+        ]);
     }
 
     function it_unwrapOrs()
@@ -100,7 +102,7 @@ class ErrSpec extends ObjectBehavior
     function it_unwrapOrElses()
     {
         $this->beConstructedWith("error");
-        $this->unwrapOrElse(function($err) {
+        $this->unwrapOrElse(function ($err) {
             return "non-" . $err;
         })->shouldBe("non-error");
     }
@@ -157,7 +159,7 @@ class ErrSpec extends ObjectBehavior
     function it_mapErrs_with_pass_args()
     {
         $this->beConstructedWith("foo", "bar", "baz");
-        $result = $this->mapErr(function($foo, $bar, $baz) {
+        $result = $this->mapErr(function ($foo, $bar, $baz) {
             return $foo . $bar . $baz;
         });
 
@@ -168,7 +170,7 @@ class ErrSpec extends ObjectBehavior
     function it_orElses_with_pass_args()
     {
         $this->beConstructedWith("foo", "bar", "baz");
-        $result = $this->orElse(function($foo, $bar, $baz) {
+        $result = $this->orElse(function ($foo, $bar, $baz) {
             return new Err($foo . $bar . $baz);
         });
 
@@ -180,7 +182,7 @@ class ErrSpec extends ObjectBehavior
         $this->beConstructedWith("foo");
         $this->with("bar", "baz");
 
-        $result = $this->orElse(function($foo, $bar, $baz) {
+        $result = $this->orElse(function ($foo, $bar, $baz) {
             return new Err($foo . $bar . $baz);
         });
 

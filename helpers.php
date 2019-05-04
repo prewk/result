@@ -14,7 +14,8 @@ if (!function_exists("ok")) {
      * @param array ...$pass
      * @return Prewk\Result\Ok
      */
-    function ok($value = null, ...$pass): Prewk\Result\Ok {
+    function ok($value = null, ...$pass): Prewk\Result\Ok
+    {
         return new Prewk\Result\Ok($value, ...$pass);
     }
 }
@@ -28,7 +29,8 @@ if (!function_exists("err")) {
      * @param array ...$pass
      * @return Prewk\Result\Err
      */
-    function err($err, ...$pass): Prewk\Result\Err {
+    function err($err, ...$pass): Prewk\Result\Err
+    {
         return new Prewk\Result\Err($err, $pass);
     }
 }

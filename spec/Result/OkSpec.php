@@ -31,7 +31,7 @@ class OkSpec extends ObjectBehavior
     function it_maps()
     {
         $this->beConstructedWith("foo");
-        $result = $this->map(function($value) {
+        $result = $this->map(function ($value) {
             return $value . "bar";
         });
 
@@ -42,7 +42,8 @@ class OkSpec extends ObjectBehavior
     function it_doesnt_errMap()
     {
         $this->beConstructedWith("foo");
-        $result = $this->mapErr(function($value) {});
+        $result = $this->mapErr(function ($value) {
+        });
 
         $result->shouldHaveType(Ok::class);
         $result->unwrap()->shouldBe("foo");
@@ -65,7 +66,7 @@ class OkSpec extends ObjectBehavior
         $otherResult = null;
 
         $this->beConstructedWith("foo");
-        $this->andThen(function($value) use (&$otherResult) {
+        $this->andThen(function ($value) use (&$otherResult) {
             $otherResult = new Ok($value . "bar");
             return $otherResult;
         })->shouldBe($otherResult);
@@ -74,9 +75,11 @@ class OkSpec extends ObjectBehavior
     function it_throws_on_andThen_closure_return_type_mismatch()
     {
         $this->beConstructedWith("foo");
-        $this->shouldThrow(ResultException::class)->during("andThen", [function() {
-            return "Not a result";
-        }]);
+        $this->shouldThrow(ResultException::class)->during("andThen", [
+            function () {
+                return "Not a result";
+            }
+        ]);
     }
 
     function it_ors()
@@ -88,7 +91,8 @@ class OkSpec extends ObjectBehavior
     function it_doesnt_orElse()
     {
         $this->beConstructedWith("foo");
-        $this->orElse(function() {})->shouldBe($this);
+        $this->orElse(function () {
+        })->shouldBe($this);
     }
 
     function it_unwrapOrs_with_its_value()
@@ -100,7 +104,8 @@ class OkSpec extends ObjectBehavior
     function it_unwrapOrElses_with_its_value()
     {
         $this->beConstructedWith("value");
-        $this->unwrapOrElse(function() {})->shouldBe("value");
+        $this->unwrapOrElse(function () {
+        })->shouldBe("value");
     }
 
     function it_unwraps_with_its_value()
@@ -140,16 +145,16 @@ class OkSpec extends ObjectBehavior
 
     function it_can_apply_argument_to_function()
     {
-        $this->beConstructedWith(function($one) {
+        $this->beConstructedWith(function ($one) {
             return $one;
         });
         $arg = new Ok(13);
         $this->apply($arg)->unwrap()->shouldBe(13);
     }
-    
+
     function it_can_apply_multiple_arguments_to_function()
     {
-        $this->beConstructedWith(function($x, $y, $z) {
+        $this->beConstructedWith(function ($x, $y, $z) {
             return $x + $y + $z;
         });
         $this->apply(new Ok(1), new Ok(2), new Ok(3))->unwrap()->shouldBe(6);
@@ -157,7 +162,7 @@ class OkSpec extends ObjectBehavior
 
     function it_returns_err_when_one_of_args_is_err()
     {
-        $this->beConstructedWith(function($x, $y, $z) {
+        $this->beConstructedWith(function ($x, $y, $z) {
             return $x + $y + $z;
         });
         $this->apply(new Ok(1), new Ok(2), new Err(3))->isErr()->shouldBe(true);
@@ -172,7 +177,7 @@ class OkSpec extends ObjectBehavior
     function it_maps_with_pass_args()
     {
         $this->beConstructedWith("foo", "bar", "baz");
-        $result = $this->map(function($foo, $bar, $baz) {
+        $result = $this->map(function ($foo, $bar, $baz) {
             return $foo . $bar . $baz;
         });
 
@@ -183,7 +188,7 @@ class OkSpec extends ObjectBehavior
     function it_andThens_with_pass_args()
     {
         $this->beConstructedWith("foo", "bar", "baz");
-        $result = $this->andThen(function($foo, $bar, $baz) {
+        $result = $this->andThen(function ($foo, $bar, $baz) {
             return new Ok($foo . $bar . $baz);
         });
 
@@ -195,7 +200,7 @@ class OkSpec extends ObjectBehavior
         $this->beConstructedWith("foo");
         $this->with("bar", "baz");
 
-        $result = $this->andThen(function($foo, $bar, $baz) {
+        $result = $this->andThen(function ($foo, $bar, $baz) {
             return new Ok($foo . $bar . $baz);
         });
 

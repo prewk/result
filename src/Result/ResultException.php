@@ -15,4 +15,5 @@ use Exception;
  * ResultException
  */
 class ResultException extends Exception
-{}
+{
+}
