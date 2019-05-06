@@ -59,6 +59,7 @@ abstract class Result
      * Maps a Result by applying a function to a contained Ok value, leaving an Err value untouched.
      *
      * @param Closure $mapper
+     * @psalm-param Closure(T):T $mapper
      * @return Result
      */
     abstract public function map(Closure $mapper): Result;
@@ -67,6 +68,7 @@ abstract class Result
      * Maps a Result by applying a function to a contained Err value, leaving an Ok value untouched.
      *
      * @param Closure $mapper
+     * @psalm-param Closure(E):E $mapper
      * @return Result
      */
     abstract public function mapErr(Closure $mapper): Result;
@@ -76,7 +78,7 @@ abstract class Result
      * The iterator yields one value if the result is Ok, otherwise none.
      *
      * @return array
-     * @psalm-return array<int, mixed>
+     * @psalm-return array<int, T>
      */
     abstract public function iter(): array;
 
@@ -125,6 +127,7 @@ abstract class Result
      * Unwraps a result, yielding the content of an Ok. If the value is an Err then it calls op with its value.
      *
      * @param Closure $op
+     * @psalm-param Closure(E) $op
      * @return mixed
      * @psalm-return T|mixed
      */
@@ -133,28 +136,28 @@ abstract class Result
     /**
      * Unwraps a result, yielding the content of an Ok.
      *
-     * @throws Exception if the value is an Err.
      * @return mixed
      * @psalm-return T
+     * @throws Exception if the value is an Err.
      */
     abstract public function unwrap();
 
     /**
      * Unwraps a result, yielding the content of an Ok.
      *
-     * @throws Exception the message if the value is an Err.
      * @param Exception $msg
      * @return mixed
      * @psalm-return T
+     * @throws Exception the message if the value is an Err.
      */
     abstract public function expect(Exception $msg);
 
     /**
      * Unwraps a result, yielding the content of an Err.
      *
-     * @throws ResultException if the value is an Ok.
      * @return mixed
      * @psalm-return E
+     * @throws ResultException if the value is an Ok.
      */
     abstract public function unwrapErr();
 

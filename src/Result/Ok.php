@@ -100,7 +100,7 @@ class Ok extends Result
      * The iterator yields one value if the result is Ok, otherwise none.
      *
      * @return array
-     * @psalm-return array<int, mixed>
+     * @psalm-return array<int, T>
      */
     public function iter(): array
     {
@@ -185,7 +185,6 @@ class Ok extends Result
     /**
      * Unwraps a result, yielding the content of an Ok.
      *
-     * @throws if the value is an Err.
      * @return mixed
      * @psalm-return T
      */
@@ -197,10 +196,10 @@ class Ok extends Result
     /**
      * Unwraps a result, yielding the content of an Ok.
      *
-     * @throws Exception (the message) if the value is an Err.
      * @param Exception $msg
      * @return mixed
      * @psalm-return T
+     * @throws Exception (the message) if the value is an Err.
      */
     public function expect(Exception $msg)
     {
@@ -210,9 +209,9 @@ class Ok extends Result
     /**
      * Unwraps a result, yielding the content of an Err.
      *
-     * @throws ResultException if the value is an Ok.
      * @return mixed
      * @psalm-return E
+     * @throws ResultException if the value is an Ok.
      */
     public function unwrapErr()
     {
@@ -252,7 +251,7 @@ class Ok extends Result
      * Converts from Result<T, E> to Option<T>, and discarding the error, if any
      *
      * @return Option
-     * @psalm-return Option<mixed>
+     * @psalm-return Option<T>
      */
     public function ok(): Option
     {

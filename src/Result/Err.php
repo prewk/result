@@ -100,7 +100,7 @@ class Err extends Result
      * The iterator yields one value if the result is Ok, otherwise none.
      *
      * @return array
-     * @psalm-return array<int, mixed>
+     * @psalm-return array<int, T>
      */
     public function iter(): array
     {
