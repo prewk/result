@@ -25,7 +25,7 @@ use Prewk\Result;
  * @template E
  * The Err value
  *
- * @inherits Result<T, E>
+ * @template-extends Result<T, E>
  */
 class Err extends Result
 {
@@ -54,9 +54,7 @@ class Err extends Result
     }
 
     /**
-     * Returns true if the result is Ok.
-     *
-     * @return bool
+     * @inheritDoc
      */
     public function isOk(): bool
     {
@@ -64,9 +62,7 @@ class Err extends Result
     }
 
     /**
-     * Returns true if the result is Err.
-     *
-     * @return bool
+     * @inheritDoc
      */
     public function isErr(): bool
     {
@@ -74,10 +70,9 @@ class Err extends Result
     }
 
     /**
-     * Maps a Result by applying a function to a contained Ok value, leaving an Err value untouched.
+     * @inheritDoc
      *
-     * @param Closure $mapper
-     * @return Result
+     * @return $this
      */
     public function map(Closure $mapper): Result
     {
@@ -85,10 +80,7 @@ class Err extends Result
     }
 
     /**
-     * Maps a Result by applying a function to a contained Err value, leaving an Ok value untouched.
-     *
-     * @param Closure $mapper
-     * @return Result
+     * @inheritDoc
      */
     public function mapErr(Closure $mapper): Result
     {
@@ -96,11 +88,7 @@ class Err extends Result
     }
 
     /**
-     * Returns an iterator over the possibly contained value.
-     * The iterator yields one value if the result is Ok, otherwise none.
-     *
-     * @return array
-     * @psalm-return array<int, T>
+     * @inheritDoc
      */
     public function iter(): array
     {
@@ -108,10 +96,9 @@ class Err extends Result
     }
 
     /**
-     * Returns res if the result is Ok, otherwise returns the Err value of self.
+     * @inheritDoc
      *
-     * @param Result $res
-     * @return Result
+     * @return $this
      */
     public function and(Result $res): Result
     {
@@ -119,10 +106,7 @@ class Err extends Result
     }
 
     /**
-     * Calls op if the result is Ok, otherwise returns the Err value of self.
-     *
-     * @param Closure $op
-     * @return Result
+     * @inheritDoc
      */
     public function andThen(Closure $op): Result
     {
@@ -130,10 +114,7 @@ class Err extends Result
     }
 
     /**
-     * Returns res if the result is Err, otherwise returns the Ok value of self.
-     *
-     * @param Result $res
-     * @return Result
+     * @inheritDoc
      */
     public function or(Result $res): Result
     {
@@ -141,11 +122,12 @@ class Err extends Result
     }
 
     /**
-     * Calls op if the result is Err, otherwise returns the Ok value of self.
+     * @inheritDoc
      *
-     * @param Closure $op T -> Result<T>
-     * @return Result
      * @throws ResultException on invalid op return type
+     * @psalm-assert !Closure(T=):Result $op
+     *
+     * @psalm-suppress DocblockTypeContradiction We cannot be completely sure, that in argument valid callable
      */
     public function orElse(Closure $op): Result
     {
@@ -159,11 +141,9 @@ class Err extends Result
     }
 
     /**
-     * Unwraps a result, yielding the content of an Ok. Else, it returns optb.
+     * @inheritDoc
      *
-     * @param $optb
-     * @return mixed
-     * @psalm-return T|mixed
+     * @psalm-return U
      */
     public function unwrapOr($optb)
     {
@@ -171,11 +151,9 @@ class Err extends Result
     }
 
     /**
-     * Unwraps a result, yielding the content of an Ok. If the value is an Err then it calls op with its value.
+     * @inheritDoc
      *
-     * @param Closure $op
-     * @return mixed
-     * @psalm-return T|mixed
+     * @psalm-return U
      */
     public function unwrapOrElse(Closure $op)
     {
@@ -183,12 +161,9 @@ class Err extends Result
     }
 
     /**
-     * Unwraps a result, yielding the content of an Ok.
+     * @inheritDoc
      *
-     * @throws Exception|ResultException If the value is an Err, unwrapping will throw it if it's an exception
-     *                                   or ResultException if it is not.
-     * @return void
-     * @psalm-return no-return
+     * @psalm-return never-return
      */
     public function unwrap()
     {
@@ -200,12 +175,9 @@ class Err extends Result
     }
 
     /**
-     * Unwraps a result, yielding the content of an Ok.
+     * @inheritDoc
      *
-     * @param Exception $msg
-     * @return mixed
-     * @psalm-return T
-     * @throws Exception the message if the value is an Err.
+     * @psalm-return never-return
      */
     public function expect(Exception $msg)
     {
@@ -213,11 +185,7 @@ class Err extends Result
     }
 
     /**
-     * Unwraps a result, yielding the content of an Err.
-     *
-     * @throws if the value is an Ok.
-     * @return mixed
-     * @psalm-return E
+     * @inheritDoc
      */
     public function unwrapErr()
     {
@@ -225,11 +193,9 @@ class Err extends Result
     }
 
     /**
-     * Applies values inside the given Results to the function in this Result.
+     * @inheritDoc
      *
-     * @param Result[] ...$inArgs Results to apply the function to.
-     * @psalm-param Result ...$inArgs
-     * @return Result
+     * @return $this
      */
     public function apply(Result ...$inArgs): Result
     {
@@ -237,10 +203,7 @@ class Err extends Result
     }
 
     /**
-     * Converts from Result<T, E> to Option<T>, and discarding the error, if any
-     *
-     * @return Option
-     * @psalm-return Option<mixed>
+     * @inheritDoc
      */
     public function ok(): Option
     {
@@ -248,10 +211,7 @@ class Err extends Result
     }
 
     /**
-     * Converts from Result<T, E> to Option<E>, and discarding the value, if any
-     *
-     * @return Option
-     * @psalm-return Option<mixed>
+     * @inheritDoc
      */
     public function err(): Option
     {
@@ -259,10 +219,9 @@ class Err extends Result
     }
 
     /**
-     * The attached pass-through args will be unpacked into extra args into chained closures
+     * @inheritDoc
      *
-     * @param array ...$args
-     * @return Result
+     * @return $this
      */
     public function with(...$args): Result
     {
