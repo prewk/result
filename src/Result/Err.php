@@ -143,6 +143,8 @@ class Err extends Result
     /**
      * @inheritDoc
      *
+     * @template U
+     *
      * @psalm-return U
      */
     public function unwrapOr($optb)
@@ -152,6 +154,8 @@ class Err extends Result
 
     /**
      * @inheritDoc
+     *
+     * @template U
      *
      * @psalm-return U
      */
