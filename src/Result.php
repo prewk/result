@@ -71,7 +71,7 @@ abstract class Result
      * Maps a Result by applying a function to a contained Err value, leaving an Ok value untouched.
      *
      * @param Closure $mapper
-     * @psalm-param Closure(E=):E $mapper
+     * @psalm-param Closure(E=,mixed...):E $mapper
      * @return Result
      * @psalm-return Result<T,E>
      */
@@ -128,7 +128,7 @@ abstract class Result
      * @template F
      *
      * @param Closure $op
-     * @psalm-param Closure(E=):F $op
+     * @psalm-param Closure(E=,mixed...):F $op
      * @return Result
      * @psalm-return Result<T,F>
      */
@@ -152,7 +152,7 @@ abstract class Result
      * @template U
      *
      * @param Closure $op
-     * @psalm-param Closure(E=):U $op
+     * @psalm-param Closure(E=,mixed...):U $op
      * @return mixed
      * @psalm-return T|U
      */
