@@ -58,9 +58,12 @@ abstract class Result
     /**
      * Maps a Result by applying a function to a contained Ok value, leaving an Err value untouched.
      *
+     * @template U
+     *
      * @param Closure $mapper
-     * @psalm-param Closure(T):T $mapper
+     * @psalm-param Closure(T=,mixed...):U $mapper
      * @return Result
+     * @psalm-return Result<U,E>
      */
     abstract public function map(Closure $mapper): Result;
 
@@ -68,8 +71,9 @@ abstract class Result
      * Maps a Result by applying a function to a contained Err value, leaving an Ok value untouched.
      *
      * @param Closure $mapper
-     * @psalm-param Closure(E):E $mapper
+     * @psalm-param Closure(E=):E $mapper
      * @return Result
+     * @psalm-return Result<T,E>
      */
     abstract public function mapErr(Closure $mapper): Result;
 
@@ -85,51 +89,72 @@ abstract class Result
     /**
      * Returns res if the result is Ok, otherwise returns the Err value of self.
      *
+     * @template U
+     *
      * @param Result $res
+     * @psalm-param Result<U,E> $res
      * @return Result
+     * @psalm-return Result<U,E>
      */
     abstract public function and(Result $res): Result;
 
     /**
      * Calls op if the result is Ok, otherwise returns the Err value of self.
      *
+     * @template U
+     *
      * @param Closure $op
+     * @psalm-param Closure(T=,mixed...):Result<U,E> $op
      * @return Result
+     * @psalm-return Result<U,E>
      */
     abstract public function andThen(Closure $op): Result;
 
     /**
      * Returns res if the result is Err, otherwise returns the Ok value of self.
      *
+     * @template F
+     *
      * @param Result $res
+     * @psalm-param Result<T,F> $res
      * @return Result
+     * @psalm-return Result<T,F>
      */
     abstract public function or(Result $res): Result;
 
     /**
      * Calls op if the result is Err, otherwise returns the Ok value of self.
      *
+     * @template F
+     *
      * @param Closure $op
+     * @psalm-param Closure(E=):F $op
      * @return Result
+     * @psalm-return Result<T,F>
      */
     abstract public function orElse(Closure $op): Result;
 
     /**
      * Unwraps a result, yielding the content of an Ok. Else, it returns optb.
      *
+     * @template U
+     *
      * @param mixed $optb
+     * @psalm-param U $optb
      * @return mixed
-     * @psalm-return T|mixed
+     * @psalm-return T|U
      */
     abstract public function unwrapOr($optb);
 
     /**
      * Unwraps a result, yielding the content of an Ok. If the value is an Err then it calls op with its value.
      *
+     * @template U
+     *
      * @param Closure $op
-     * @psalm-param Closure(E) $op
+     * @psalm-param Closure(E=):U $op
      * @return mixed
-     * @psalm-return T|mixed
+     * @psalm-return T|U
      */
     abstract public function unwrapOrElse(Closure $op);
 
@@ -145,7 +170,10 @@ abstract class Result
     /**
      * Unwraps a result, yielding the content of an Ok.
      *
+     * @template X as Exception
+     *
      * @param Exception $msg
+     * @psalm-param X&Exception $msg
      * @return mixed
      * @psalm-return T
      * @throws Exception the message if the value is an Err.
@@ -164,16 +192,17 @@ abstract class Result
     /**
      * Applies values inside the given Results to the function in this Result.
      *
-     * @param Result[] ...$inArgs Results to apply the function to.
+     * @param Result ...$inArgs Results to apply the function to.
      * @psalm-param Result ...$inArgs
      * @return Result
+     * @psalm-return Result
      */
     abstract public function apply(Result ...$inArgs): Result;
 
     /**
      * The attached pass-through args will be unpacked into extra args into chained closures
      *
-     * @param array ...$args
+     * @param mixed ...$args
      * @return Result
      */
     abstract public function with(...$args): Result;
