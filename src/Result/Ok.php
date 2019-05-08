@@ -214,10 +214,7 @@ class Ok extends Result
     }
 
     /**
-     * Converts from Result<T, E> to Option<T>, and discarding the error, if any
-     *
-     * @return Option
-     * @psalm-return Option<T>
+     * @inheritDoc
      */
     public function ok(): Option
     {
@@ -225,10 +222,7 @@ class Ok extends Result
     }
 
     /**
-     * Converts from Result<T, E> to Option<E>, and discarding the value, if any
-     *
-     * @return Option
-     * @psalm-return Option<mixed>
+     * @inheritDoc
      */
     public function err(): Option
     {
@@ -236,9 +230,8 @@ class Ok extends Result
     }
 
     /**
-     * The attached pass-through args will be unpacked into extra args into chained closures
+     * @inheritDoc
      *
-     * @param mixed ...$args
      * @return $this
      */
     public function with(...$args): Result
