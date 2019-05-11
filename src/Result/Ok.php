@@ -188,7 +188,7 @@ class Ok extends Result
      *
      * @throws ResultException
      *
-     * @psalm-return Result<array,E>
+     * @psalm-return Result<mixed,E>
      *
      * @psalm-suppress MissingClosureReturnType
      */
