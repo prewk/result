@@ -70,6 +70,8 @@ abstract class Result
     /**
      * Maps a Result by applying a function to a contained Err value, leaving an Ok value untouched.
      *
+     * @template F
+     *
      * @param Closure $mapper
      * @psalm-param Closure(E=,mixed...):F $mapper
      * @return Result
