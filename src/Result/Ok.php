@@ -190,8 +190,6 @@ class Ok extends Result
      *
      * @psalm-return Result<array,E>
      *
-//     * @psalm-assert T!=callable $this->value
-//     * @psalm-assert T!=callable(T=,...mixed=):Result<array,E> $this->value
      * @psalm-suppress MissingClosureReturnType
      */
     public function apply(Result ...$inArgs): Result
