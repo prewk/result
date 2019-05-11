@@ -190,6 +190,7 @@ abstract class Result
      *
      * @param Result ...$inArgs Results to apply the function to.
      * @return Result
+     * @psalm-return Result<mixed,E>
      */
     abstract public function apply(Result ...$inArgs): Result;
 
