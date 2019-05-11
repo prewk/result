@@ -71,9 +71,9 @@ abstract class Result
      * Maps a Result by applying a function to a contained Err value, leaving an Ok value untouched.
      *
      * @param Closure $mapper
-     * @psalm-param Closure(E=,mixed...):E $mapper
+     * @psalm-param Closure(E=,mixed...):F $mapper
      * @return Result
-     * @psalm-return Result<T,E>
+     * @psalm-return Result<T,F>
      */
     abstract public function mapErr(Closure $mapper): Result;
 
@@ -128,7 +128,7 @@ abstract class Result
      * @template F
      *
      * @param Closure $op
-     * @psalm-param Closure(E=,mixed...):F $op
+     * @psalm-param Closure(E=,mixed...):Result<T,F> $op
      * @return Result
      * @psalm-return Result<T,F>
      */
@@ -137,24 +137,20 @@ abstract class Result
     /**
      * Unwraps a result, yielding the content of an Ok. Else, it returns optb.
      *
-     * @template U
-     *
      * @param mixed $optb
-     * @psalm-param U $optb
+     * @psalm-param T $optb
      * @return mixed
-     * @psalm-return T|U
+     * @psalm-return T
      */
     abstract public function unwrapOr($optb);
 
     /**
      * Unwraps a result, yielding the content of an Ok. If the value is an Err then it calls op with its value.
      *
-     * @template U
-     *
      * @param Closure $op
-     * @psalm-param Closure(E=,mixed...):U $op
+     * @psalm-param Closure(E=,mixed...):T $op
      * @return mixed
-     * @psalm-return T|U
+     * @psalm-return T
      */
     abstract public function unwrapOrElse(Closure $op);
 
@@ -193,9 +189,7 @@ abstract class Result
      * Applies values inside the given Results to the function in this Result.
      *
      * @param Result ...$inArgs Results to apply the function to.
-     * @psalm-param Result ...$inArgs
      * @return Result
-     * @psalm-return Result
      */
     abstract public function apply(Result ...$inArgs): Result;
 
@@ -204,6 +198,7 @@ abstract class Result
      *
      * @param mixed ...$args
      * @return Result
+     * @psalm-return Result<T,E>
      */
     abstract public function with(...$args): Result;
 }
