@@ -86,7 +86,7 @@ class Err extends Result
      */
     public function map(Closure $mapper): Result
     {
-        return $this;
+        return new self($this->err, ...$this->pass);
     }
 
     /**
@@ -128,7 +128,7 @@ class Err extends Result
      */
     public function and(Result $res): Result
     {
-        return $this;
+        return new self($this->err, ...$this->pass);
     }
 
     /**
@@ -143,7 +143,7 @@ class Err extends Result
      */
     public function andThen(Closure $op): Result
     {
-        return $this;
+        return new self($this->err, ...$this->pass);
     }
 
     /**

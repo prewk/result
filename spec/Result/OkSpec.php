@@ -85,14 +85,14 @@ class OkSpec extends ObjectBehavior
     function it_ors()
     {
         $this->beConstructedWith("foo");
-        $this->or(new Ok("bar"))->shouldBe($this);
+        $this->or(new Ok("bar"))->shouldHaveType(Ok::class);
     }
 
     function it_doesnt_orElse()
     {
         $this->beConstructedWith("foo");
         $this->orElse(function () {
-        })->shouldBe($this);
+        })->shouldHaveType(Ok::class);
     }
 
     function it_unwrapOrs_with_its_value()

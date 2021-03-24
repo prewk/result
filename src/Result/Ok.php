@@ -101,7 +101,7 @@ class Ok extends Result
      */
     public function mapErr(Closure $mapper): Result
     {
-        return $this;
+        return new self($this->value, ...$this->pass);
     }
 
     /**
@@ -169,7 +169,7 @@ class Ok extends Result
      */
     public function or(Result $res): Result
     {
-        return $this;
+        return new self($this->value, ...$this->pass);
     }
 
     /**
@@ -184,7 +184,7 @@ class Ok extends Result
      */
     public function orElse(Closure $op): Result
     {
-        return $this;
+        return new self($this->value, ...$this->pass);
     }
 
     /**
