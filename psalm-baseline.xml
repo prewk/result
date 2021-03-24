@@ -10,8 +10,5 @@
     <MixedFunctionCall occurrences="1">
       <code>call_user_func_array($this-&gt;value, $argArray)</code>
     </MixedFunctionCall>
-    <UnsafeInstantiation occurrences="1">
-      <code>new static([])</code>
-    </UnsafeInstantiation>
   </file>
 </files>

@@ -248,8 +248,6 @@ class Ok extends Result
      * @psalm-return Result<mixed,E>
      *
      * @throws ResultException
-     *
-     * @psalm-suppress MissingClosureReturnType
      */
     public function apply(Result ...$inArgs): Result
     {
@@ -264,10 +262,15 @@ class Ok extends Result
                     return $outArgs;
                 });
             });
-        }, new static([]))
-            ->map(function (array $argArray) {
-                return call_user_func_array($this->value, $argArray);
-            });
+        }, new self([]))
+            ->map(
+                /**
+                 * @return mixed
+                 */
+                function (array $argArray) {
+                    return call_user_func_array($this->value, $argArray);
+                }
+            );
     }
 
     /**
