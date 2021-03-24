@@ -3,7 +3,7 @@ suites:
         namespace: Prewk
         psr4_prefix: Prewk
 extensions:
-    LeanPHP\PhpSpec\CodeCoverage\CodeCoverageExtension:
+    FriendsOfPhpSpec\PhpSpec\CodeCoverage\CodeCoverageExtension:
         format:
             - clover
         output:
