@@ -37,6 +37,7 @@ class Err extends Result
 
     /**
      * @var array
+     * @psalm-var list<mixed>
      */
     private $pass;
 
@@ -45,7 +46,7 @@ class Err extends Result
      *
      * @param mixed $err
      * @psalm-param E $err
-     * @param array ...$pass
+     * @param mixed ...$pass
      */
     public function __construct($err, ...$pass)
     {

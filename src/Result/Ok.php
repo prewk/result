@@ -37,6 +37,7 @@ class Ok extends Result
 
     /**
      * @var array
+     * @psalm-var list<mixed>
      */
     private $pass;
 
