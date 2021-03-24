@@ -2,6 +2,10 @@
 
 A PHP implementation of [Rust's Result type](https://doc.rust-lang.org/std/result/enum.Result.html) with roughly the same API.
 
+## Version information
+
+Version 3.x.x requires PHP 7.3+. Make sure you match the versions for this and the [Option](https://github.com/prewk/option) library if you use both.
+
 ## Installation
 
 ```php
