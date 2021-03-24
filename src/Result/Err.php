@@ -215,9 +215,9 @@ class Err extends Result
     {
         if ($this->err instanceof Exception) {
             throw $this->err;
-        } else {
-            throw new ResultException("Unwrapped an Err");
         }
+
+        throw new ResultException("Unwrapped an Err");
     }
 
     /**
