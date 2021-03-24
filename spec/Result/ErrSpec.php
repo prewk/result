@@ -83,16 +83,6 @@ class ErrSpec extends ObjectBehavior
         })->shouldBe($otherValue);
     }
 
-    function it_throws_if_orElse_closure_return_type_mismatch()
-    {
-        $this->beConstructedWith("error");
-        $this->shouldThrow(ResultException::class)->during("orElse", [
-            function () {
-                return "Not a result";
-            }
-        ]);
-    }
-
     function it_unwrapOrs()
     {
         $this->beConstructedWith("error");

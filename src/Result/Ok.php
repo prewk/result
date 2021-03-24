@@ -141,20 +141,11 @@ class Ok extends Result
      * @return Result
      * @psalm-return Result<U,E>
      *
-     * @throws ResultException on invalid op return type
      * @psalm-assert !Closure(T=):Result $op
-     *
-     * @psalm-suppress DocblockTypeContradiction We cannot be completely sure, that in argument valid callable
      */
     public function andThen(Closure $op): Result
     {
-        $result = $op($this->value, ...$this->pass);
-
-        if (!($result instanceof Result)) {
-            throw new ResultException('Op must return a Result');
-        }
-
-        return $result;
+        return $op($this->value, ...$this->pass);
     }
 
     /**

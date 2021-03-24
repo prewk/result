@@ -171,20 +171,11 @@ class Err extends Result
      * @return Result
      * @psalm-return Result<T,F>
      *
-     * @throws ResultException on invalid op return type
      * @psalm-assert !Closure(T=):Result $op
-     *
-     * @psalm-suppress DocblockTypeContradiction We cannot be completely sure, that in argument valid callable
      */
     public function orElse(Closure $op): Result
     {
-        $result = $op($this->err, ...$this->pass);
-
-        if (!($result instanceof Result)) {
-            throw new ResultException("Op must return a Result");
-        }
-
-        return $result;
+        return $op($this->err, ...$this->pass);
     }
 
     /**
