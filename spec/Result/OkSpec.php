@@ -72,27 +72,17 @@ class OkSpec extends ObjectBehavior
         })->shouldBe($otherResult);
     }
 
-    function it_throws_on_andThen_closure_return_type_mismatch()
-    {
-        $this->beConstructedWith("foo");
-        $this->shouldThrow(ResultException::class)->during("andThen", [
-            function () {
-                return "Not a result";
-            }
-        ]);
-    }
-
     function it_ors()
     {
         $this->beConstructedWith("foo");
-        $this->or(new Ok("bar"))->shouldBe($this);
+        $this->or(new Ok("bar"))->shouldHaveType(Ok::class);
     }
 
     function it_doesnt_orElse()
     {
         $this->beConstructedWith("foo");
         $this->orElse(function () {
-        })->shouldBe($this);
+        })->shouldHaveType(Ok::class);
     }
 
     function it_unwrapOrs_with_its_value()

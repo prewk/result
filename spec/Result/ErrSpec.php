@@ -32,7 +32,7 @@ class ErrSpec extends ObjectBehavior
     function it_doesnt_map()
     {
         $this->beConstructedWith("error");
-        $this->map(function () {})->shouldBe($this);
+        $this->map(function () {})->shouldHaveType(Err::class);
     }
 
     function it_mapErrs()
@@ -55,13 +55,13 @@ class ErrSpec extends ObjectBehavior
     function it_shouldnt_and()
     {
         $this->beConstructedWith("error");
-        $this->and(new Err("ignored"))->shouldReturn($this);
+        $this->and(new Err("ignored"))->shouldHaveType(Err::class);
     }
 
     function it_shouldnt_andThen()
     {
         $this->beConstructedWith("error");
-        $this->andThen(function () {})->shouldReturn($this);
+        $this->andThen(function () {})->shouldHaveType(Err::class);
     }
 
     function it_should_or()
@@ -81,16 +81,6 @@ class ErrSpec extends ObjectBehavior
             $otherValue = new Err($err . "rorre");
             return $otherValue;
         })->shouldBe($otherValue);
-    }
-
-    function it_throws_if_orElse_closure_return_type_mismatch()
-    {
-        $this->beConstructedWith("error");
-        $this->shouldThrow(ResultException::class)->during("orElse", [
-            function () {
-                return "Not a result";
-            }
-        ]);
     }
 
     function it_unwrapOrs()

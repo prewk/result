@@ -37,6 +37,7 @@ class Ok extends Result
 
     /**
      * @var array
+     * @psalm-var list<mixed>
      */
     private $pass;
 
@@ -100,7 +101,7 @@ class Ok extends Result
      */
     public function mapErr(Closure $mapper): Result
     {
-        return $this;
+        return new self($this->value, ...$this->pass);
     }
 
     /**
@@ -140,20 +141,11 @@ class Ok extends Result
      * @return Result
      * @psalm-return Result<U,E>
      *
-     * @throws ResultException on invalid op return type
      * @psalm-assert !Closure(T=):Result $op
-     *
-     * @psalm-suppress DocblockTypeContradiction We cannot be completely sure, that in argument valid callable
      */
     public function andThen(Closure $op): Result
     {
-        $result = $op($this->value, ...$this->pass);
-
-        if (!($result instanceof Result)) {
-            throw new ResultException('Op must return a Result');
-        }
-
-        return $result;
+        return $op($this->value, ...$this->pass);
     }
 
     /**
@@ -168,7 +160,7 @@ class Ok extends Result
      */
     public function or(Result $res): Result
     {
-        return $this;
+        return new self($this->value, ...$this->pass);
     }
 
     /**
@@ -183,7 +175,7 @@ class Ok extends Result
      */
     public function orElse(Closure $op): Result
     {
-        return $this;
+        return new self($this->value, ...$this->pass);
     }
 
     /**
@@ -256,8 +248,6 @@ class Ok extends Result
      * @psalm-return Result<mixed,E>
      *
      * @throws ResultException
-     *
-     * @psalm-suppress MissingClosureReturnType
      */
     public function apply(Result ...$inArgs): Result
     {
@@ -272,10 +262,15 @@ class Ok extends Result
                     return $outArgs;
                 });
             });
-        }, new static([]))
-            ->map(function (array $argArray) {
-                return call_user_func_array($this->value, $argArray);
-            });
+        }, new self([]))
+            ->map(
+                /**
+                 * @return mixed
+                 */
+                function (array $argArray) {
+                    return call_user_func_array($this->value, $argArray);
+                }
+            );
     }
 
     /**

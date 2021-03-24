@@ -21,13 +21,16 @@
         }
     ],
     "require": {
-        "prewk/option": "*",
-        "php": ">=7.0"
+        "prewk/option": ">= 1.3.0",
+        "php": ">=7.3.0"
     },
     "require-dev": {
-        "phpspec/phpspec": "^3.2",
-        "leanphp/phpspec-code-coverage": "^3.1",
-        "satooshi/php-coveralls": "^1.0",
-        "vimeo/psalm": "^3.2"
+        "phpspec/phpspec": "^7.0.1",
+        "friends-of-phpspec/phpspec-code-coverage": "^6.0.0",
+        "phpunit/php-code-coverage": "^9.2.5",
+        "phpunit/php-file-iterator": "^3.0.5",
+        "php-coveralls/php-coveralls": "^2.4.3",
+        "guzzlehttp/guzzle": "^7.3.0",
+        "vimeo/psalm": "^4.6.4"
     }
 }

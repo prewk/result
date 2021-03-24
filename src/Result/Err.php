@@ -37,6 +37,7 @@ class Err extends Result
 
     /**
      * @var array
+     * @psalm-var list<mixed>
      */
     private $pass;
 
@@ -45,7 +46,7 @@ class Err extends Result
      *
      * @param mixed $err
      * @psalm-param E $err
-     * @param array ...$pass
+     * @param mixed ...$pass
      */
     public function __construct($err, ...$pass)
     {
@@ -85,7 +86,7 @@ class Err extends Result
      */
     public function map(Closure $mapper): Result
     {
-        return $this;
+        return new self($this->err, ...$this->pass);
     }
 
     /**
@@ -127,7 +128,7 @@ class Err extends Result
      */
     public function and(Result $res): Result
     {
-        return $this;
+        return new self($this->err, ...$this->pass);
     }
 
     /**
@@ -142,7 +143,7 @@ class Err extends Result
      */
     public function andThen(Closure $op): Result
     {
-        return $this;
+        return new self($this->err, ...$this->pass);
     }
 
     /**
@@ -170,20 +171,11 @@ class Err extends Result
      * @return Result
      * @psalm-return Result<T,F>
      *
-     * @throws ResultException on invalid op return type
      * @psalm-assert !Closure(T=):Result $op
-     *
-     * @psalm-suppress DocblockTypeContradiction We cannot be completely sure, that in argument valid callable
      */
     public function orElse(Closure $op): Result
     {
-        $result = $op($this->err, ...$this->pass);
-
-        if (!($result instanceof Result)) {
-            throw new ResultException("Op must return a Result");
-        }
-
-        return $result;
+        return $op($this->err, ...$this->pass);
     }
 
     /**
@@ -223,9 +215,9 @@ class Err extends Result
     {
         if ($this->err instanceof Exception) {
             throw $this->err;
-        } else {
-            throw new ResultException("Unwrapped an Err");
         }
+
+        throw new ResultException("Unwrapped an Err");
     }
 
     /**
