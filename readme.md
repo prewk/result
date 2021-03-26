@@ -1,4 +1,4 @@
-# PHP Result Object ![Build Status](https://github.com/prewk/result/actions/workflows/test.yml/badge.svg) [![Coverage Status](https://coveralls.io/repos/github/prewk/result/badge.svg?branch=master)](https://coveralls.io/github/prewk/result?branch=master)
+# PHP Result Object [![Build Status](https://github.com/prewk/result/actions/workflows/test.yml/badge.svg)](https://github.com/prewk/result/actions) [![Coverage Status](https://coveralls.io/repos/github/prewk/result/badge.svg?branch=master)](https://coveralls.io/github/prewk/result?branch=master)
 
 A PHP implementation of [Rust's Result type](https://doc.rust-lang.org/std/result/enum.Result.html) with roughly the same API.
 
