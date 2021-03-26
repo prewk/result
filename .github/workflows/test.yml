@@ -1,6 +1,6 @@
 # https://docs.github.com/en/actions
 
-name: "Integrate"
+name: "test"
 
 on:
   pull_request: null
