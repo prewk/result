@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Err
  *
@@ -10,7 +11,6 @@ declare(strict_types=1);
 
 namespace Prewk\Result;
 
-use Closure;
 use Exception;
 use Prewk\Option;
 use Prewk\Option\{Some, None};
@@ -79,12 +79,12 @@ class Err extends Result
      *
      * @template U
      *
-     * @param Closure $mapper
-     * @psalm-param Closure(T=,mixed...):U $mapper
+     * @param callable $mapper
+     * @psalm-param callable(T=,mixed...):U $mapper
      * @return Result
      * @psalm-return Result<U,E>
      */
-    public function map(Closure $mapper): Result
+    public function map(callable $mapper): Result
     {
         return new self($this->err, ...$this->pass);
     }
@@ -94,12 +94,12 @@ class Err extends Result
      *
      * @template F
      *
-     * @param Closure $mapper
-     * @psalm-param Closure(E=,mixed...):F $mapper
+     * @param callable $mapper
+     * @psalm-param callable(E=,mixed...):F $mapper
      * @return Result
      * @psalm-return Result<T,F>
      */
-    public function mapErr(Closure $mapper): Result
+    public function mapErr(callable $mapper): Result
     {
         return new self($mapper($this->err, ...$this->pass));
     }
@@ -136,12 +136,12 @@ class Err extends Result
      *
      * @template U
      *
-     * @param Closure $op
-     * @psalm-param Closure(T=,mixed...):Result<U,E> $op
+     * @param callable $op
+     * @psalm-param callable(T=,mixed...):Result<U,E> $op
      * @return Result
      * @psalm-return Result<U,E>
      */
-    public function andThen(Closure $op): Result
+    public function andThen(callable $op): Result
     {
         return new self($this->err, ...$this->pass);
     }
@@ -166,14 +166,14 @@ class Err extends Result
      *
      * @template F
      *
-     * @param Closure $op
-     * @psalm-param Closure(E=,mixed...):Result<T,F> $op
+     * @param callable $op
+     * @psalm-param callable(E=,mixed...):Result<T,F> $op
      * @return Result
      * @psalm-return Result<T,F>
      *
-     * @psalm-assert !Closure(T=):Result $op
+     * @psalm-assert !callable(T=):Result $op
      */
-    public function orElse(Closure $op): Result
+    public function orElse(callable $op): Result
     {
         return $op($this->err, ...$this->pass);
     }
@@ -194,12 +194,12 @@ class Err extends Result
     /**
      * Unwraps a result, yielding the content of an Ok. If the value is an Err then it calls op with its value.
      *
-     * @param Closure $op
-     * @psalm-param Closure(E=,mixed...):T $op
+     * @param callable $op
+     * @psalm-param callable(E=,mixed...):T $op
      * @return mixed
      * @psalm-return T
      */
-    public function unwrapOrElse(Closure $op)
+    public function unwrapOrElse(callable $op)
     {
         return $op($this->err, ...$this->pass);
     }
@@ -282,7 +282,7 @@ class Err extends Result
     }
 
     /**
-     * The attached pass-through args will be unpacked into extra args into chained closures
+     * The attached pass-through args will be unpacked into extra args into chained callables
      *
      * @param mixed ...$args
      * @return Result
