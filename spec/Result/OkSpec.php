@@ -268,16 +268,5 @@ class OkSpec extends ObjectBehavior
         });
 
         $result->unwrap()->shouldBe("foobarbaz");
-
-        $instance = new class
-        {
-            public function f($foo, $bar, $baz)
-            {
-                return new Ok($baz . $foo . $bar);
-            }
-        };
-
-        $result = $this->andThen([$instance, 'f']);
-        $result->unwrap()->shouldBe("bazfoobar");
     }
 }
