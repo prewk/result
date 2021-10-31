@@ -52,7 +52,7 @@ class OkSpec extends ObjectBehavior
         $result->unwrap()->shouldBe("foobarbar");
     }
 
-    function it_doesnt_errMap()
+    function it_doesnt_mapErr()
     {
         $this->beConstructedWith("foo");
         $result = $this->mapErr(function ($value) {
