@@ -32,7 +32,16 @@ class ErrSpec extends ObjectBehavior
     function it_doesnt_map()
     {
         $this->beConstructedWith("error");
-        $this->map(function () {})->shouldHaveType(Err::class);
+        $this->map(function () {
+        })->shouldHaveType(Err::class);
+
+        $instance = new class
+        {
+            public function f($value)
+            {
+            }
+        };
+        $this->map([$instance, 'f'])->shouldHaveType(Err::class);
     }
 
     function it_mapErrs()
@@ -44,6 +53,18 @@ class ErrSpec extends ObjectBehavior
 
         $result->shouldHaveType(Err::class);
         $result->unwrapErr()->shouldBe("foobar");
+
+        $instance = new class
+        {
+            public function f($err)
+            {
+                return $err . "baz";
+            }
+        };
+
+        $result = $this->mapErr([$instance, 'f']);
+        $result->shouldHaveType(Err::class);
+        $result->unwrapErr()->shouldBe("foobaz");
     }
 
     function it_returns_an_iterator()
@@ -61,7 +82,16 @@ class ErrSpec extends ObjectBehavior
     function it_shouldnt_andThen()
     {
         $this->beConstructedWith("error");
-        $this->andThen(function () {})->shouldHaveType(Err::class);
+        $this->andThen(function () {
+        })->shouldHaveType(Err::class);
+
+        $instance = new class
+        {
+            public function f($err)
+            {
+            }
+        };
+        $this->andThen([$instance, 'f'])->shouldHaveType(Err::class);
     }
 
     function it_should_or()
@@ -81,6 +111,15 @@ class ErrSpec extends ObjectBehavior
             $otherValue = new Err($err . "rorre");
             return $otherValue;
         })->shouldBe($otherValue);
+
+        $instance = new class
+        {
+            public function f($err)
+            {
+                return new Err($err . "baz");
+            }
+        };
+        $this->orElse([$instance, 'f'])->unwrapErr()->shouldBe("errorbaz");
     }
 
     function it_unwrapOrs()
@@ -95,6 +134,15 @@ class ErrSpec extends ObjectBehavior
         $this->unwrapOrElse(function ($err) {
             return "non-" . $err;
         })->shouldBe("non-error");
+
+        $instance = new class
+        {
+            public function f($err)
+            {
+                return "non-" . $err;
+            }
+        };
+        $this->unwrapOrElse([$instance, 'f'])->shouldBe("non-error");
     }
 
     function it_throws_ResultException_on_unwrapping_non_exceptions()
@@ -155,6 +203,18 @@ class ErrSpec extends ObjectBehavior
 
         $result->shouldHaveType(Err::class);
         $result->unwrapErr()->shouldBe("foobarbaz");
+
+        $instance = new class
+        {
+            public function f($foo, $bar, $baz)
+            {
+                return $foo . $baz . $bar;
+            }
+        };
+
+        $result = $this->mapErr([$instance, 'f']);
+        $result->shouldHaveType(Err::class);
+        $result->unwrapErr()->shouldBe("foobazbar");
     }
 
     function it_orElses_with_pass_args()
@@ -165,6 +225,16 @@ class ErrSpec extends ObjectBehavior
         });
 
         $result->unwrapErr()->shouldBe("foobarbaz");
+
+        $instance = new class
+        {
+            public function f($foo, $bar, $baz)
+            {
+                return new Err($foo . $baz . $bar);
+            }
+        };
+        $result = $this->orElse([$instance, 'f']);
+        $result->unwrapErr()->shouldBe("foobazbar");
     }
 
     function its_with_method_adds_args()

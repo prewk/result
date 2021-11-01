@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Result
  *
@@ -10,7 +11,6 @@ declare(strict_types=1);
 
 namespace Prewk;
 
-use Closure;
 use Exception;
 use Prewk\Result\ResultException;
 
@@ -60,24 +60,24 @@ abstract class Result
      *
      * @template U
      *
-     * @param Closure $mapper
-     * @psalm-param Closure(T=,mixed...):U $mapper
+     * @param callable $mapper
+     * @psalm-param callable(T=,mixed...):U $mapper
      * @return Result
      * @psalm-return Result<U,E>
      */
-    abstract public function map(Closure $mapper): Result;
+    abstract public function map(callable $mapper): Result;
 
     /**
      * Maps a Result by applying a function to a contained Err value, leaving an Ok value untouched.
      *
      * @template F
      *
-     * @param Closure $mapper
-     * @psalm-param Closure(E=,mixed...):F $mapper
+     * @param callable $mapper
+     * @psalm-param callable(E=,mixed...):F $mapper
      * @return Result
      * @psalm-return Result<T,F>
      */
-    abstract public function mapErr(Closure $mapper): Result;
+    abstract public function mapErr(callable $mapper): Result;
 
     /**
      * Returns an iterator over the possibly contained value.
@@ -105,12 +105,12 @@ abstract class Result
      *
      * @template U
      *
-     * @param Closure $op
-     * @psalm-param Closure(T=,mixed...):Result<U,E> $op
+     * @param callable $op
+     * @psalm-param callable(T=,mixed...):Result<U,E> $op
      * @return Result
      * @psalm-return Result<U,E>
      */
-    abstract public function andThen(Closure $op): Result;
+    abstract public function andThen(callable $op): Result;
 
     /**
      * Returns res if the result is Err, otherwise returns the Ok value of self.
@@ -129,12 +129,12 @@ abstract class Result
      *
      * @template F
      *
-     * @param Closure $op
-     * @psalm-param Closure(E=,mixed...):Result<T,F> $op
+     * @param callable $op
+     * @psalm-param callable(E=,mixed...):Result<T,F> $op
      * @return Result
      * @psalm-return Result<T,F>
      */
-    abstract public function orElse(Closure $op): Result;
+    abstract public function orElse(callable $op): Result;
 
     /**
      * Unwraps a result, yielding the content of an Ok. Else, it returns optb.
@@ -149,12 +149,12 @@ abstract class Result
     /**
      * Unwraps a result, yielding the content of an Ok. If the value is an Err then it calls op with its value.
      *
-     * @param Closure $op
-     * @psalm-param Closure(E=,mixed...):T $op
+     * @param callable $op
+     * @psalm-param callable(E=,mixed...):T $op
      * @return mixed
      * @psalm-return T
      */
-    abstract public function unwrapOrElse(Closure $op);
+    abstract public function unwrapOrElse(callable $op);
 
     /**
      * Unwraps a result, yielding the content of an Ok.
@@ -197,7 +197,7 @@ abstract class Result
     abstract public function apply(Result ...$inArgs): Result;
 
     /**
-     * The attached pass-through args will be unpacked into extra args into chained closures
+     * The attached pass-through args will be unpacked into extra args into chained callables
      *
      * @param mixed ...$args
      * @return Result

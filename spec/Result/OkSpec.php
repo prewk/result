@@ -37,13 +37,38 @@ class OkSpec extends ObjectBehavior
 
         $result->shouldHaveType(Ok::class);
         $result->unwrap()->shouldBe("foobar");
+
+        $instance = new class
+        {
+            public function f($value)
+            {
+                return $value . "bar";
+            }
+        };
+
+        $result = $result->map([$instance, 'f']);
+
+        $result->shouldHaveType(Ok::class);
+        $result->unwrap()->shouldBe("foobarbar");
     }
 
-    function it_doesnt_errMap()
+    function it_doesnt_mapErr()
     {
         $this->beConstructedWith("foo");
         $result = $this->mapErr(function ($value) {
         });
+
+        $result->shouldHaveType(Ok::class);
+        $result->unwrap()->shouldBe("foo");
+
+        $instance = new class
+        {
+            public function f($value)
+            {
+            }
+        };
+
+        $result = $result->mapErr([$instance, 'f']);
 
         $result->shouldHaveType(Ok::class);
         $result->unwrap()->shouldBe("foo");
@@ -70,6 +95,15 @@ class OkSpec extends ObjectBehavior
             $otherResult = new Ok($value . "bar");
             return $otherResult;
         })->shouldBe($otherResult);
+
+        $instance = new class
+        {
+            public function f($value)
+            {
+                return new Ok("andThen");
+            }
+        };
+        $this->andThen([$instance, 'f'])->unwrap()->shouldBe("andThen");
     }
 
     function it_ors()
@@ -83,6 +117,14 @@ class OkSpec extends ObjectBehavior
         $this->beConstructedWith("foo");
         $this->orElse(function () {
         })->shouldHaveType(Ok::class);
+
+        $instance = new class
+        {
+            public function f($value)
+            {
+            }
+        };
+        $this->orElse([$instance, 'f'])->shouldHaveType(Ok::class);
     }
 
     function it_unwrapOrs_with_its_value()
@@ -96,6 +138,14 @@ class OkSpec extends ObjectBehavior
         $this->beConstructedWith("value");
         $this->unwrapOrElse(function () {
         })->shouldBe("value");
+
+        $instance = new class
+        {
+            public function f($value)
+            {
+            }
+        };
+        $this->unwrapOrElse([$instance, 'f'])->shouldBe("value");
     }
 
     function it_unwraps_with_its_value()
@@ -173,6 +223,18 @@ class OkSpec extends ObjectBehavior
 
         $result->shouldHaveType(Ok::class);
         $result->unwrap()->shouldBe("foobarbaz");
+
+        $instance = new class
+        {
+            public function f($foo, $bar, $baz)
+            {
+                return $foo . $baz . $bar;
+            }
+        };
+
+        $result = $this->map([$instance, 'f']);
+        $result->shouldHaveType(Ok::class);
+        $result->unwrap()->shouldBe("foobazbar");
     }
 
     function it_andThens_with_pass_args()
@@ -183,6 +245,17 @@ class OkSpec extends ObjectBehavior
         });
 
         $result->unwrap()->shouldBe("foobarbaz");
+
+        $instance = new class
+        {
+            public function f($foo, $bar, $baz)
+            {
+                return new Ok($foo . $baz . $bar);
+            }
+        };
+
+        $result = $this->andThen([$instance, 'f']);
+        $result->unwrap()->shouldBe("foobazbar");
     }
 
     function its_with_method_adds_args()
