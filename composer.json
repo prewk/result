@@ -12,7 +12,10 @@
         "test": "phpspec run && psalm"
     },
     "config": {
-        "bin-dir": "bin"
+        "bin-dir": "bin",
+        "platform": {
+            "php": "7.3"
+        }
     },
     "authors": [
         {
