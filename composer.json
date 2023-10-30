@@ -2,7 +2,7 @@
     "name": "prewk/result",
     "description": "Result object for PHP inspired by Rust",
     "type": "library",
-    "license": "(MIT and Apache-2.0)",
+    "license": "(MIT or Apache-2.0)",
     "autoload": {
         "psr-4": {
             "Prewk\\": "src/"
