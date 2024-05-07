@@ -14,6 +14,6 @@ use Exception;
 /**
  * ResultException
  */
-class ResultException extends Exception
+final class ResultException extends Exception
 {
 }
