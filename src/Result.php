@@ -123,9 +123,9 @@ abstract class Result
      * Returns an iterator over the possibly contained value.
      * The iterator yields one value if the result is Ok, otherwise none.
      *
-     * @return list<T>
+     * @return iterable<int, T>
      */
-    abstract public function iter(): array;
+    abstract public function iter(): iterable;
 
     /**
      * Unwraps a result, yielding the content of an Ok.

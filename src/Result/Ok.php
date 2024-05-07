@@ -101,7 +101,7 @@ class Ok extends Result
         return $this;
     }
 
-    public function iter(): array
+    public function iter(): iterable
     {
         return [$this->value];
     }
