@@ -27,17 +27,10 @@ use Throwable;
  */
 class Err extends Result
 {
-    /**
-     * @var array<array-key, mixed>
-     */
-    private $pass;
-
     public function __construct(
         /** @var E */
         private $err,
-        mixed ...$pass
     ) {
-        $this->pass = $pass;
     }
 
     /**
@@ -78,12 +71,12 @@ class Err extends Result
 
     public function mapOrElse(callable $default, callable $f): mixed
     {
-        return $default($this->err, ...$this->pass);
+        return $default($this->err);
     }
 
     public function mapErr(callable $op): Result
     {
-        return new self($op($this->err, ...$this->pass), ...$this->pass);
+        return new self($op($this->err));
     }
 
     public function inspect(callable $f): Result
@@ -93,7 +86,7 @@ class Err extends Result
 
     public function inspectErr(callable $f): Result
     {
-        $f($this->err, ...$this->pass);
+        $f($this->err);
 
         return $this;
     }
@@ -156,7 +149,7 @@ class Err extends Result
 
     public function orElse(callable $op): Result
     {
-        return $op($this->err, ...$this->pass);
+        return $op($this->err);
     }
 
     public function unwrapOr($optb): mixed
@@ -166,18 +159,11 @@ class Err extends Result
 
     public function unwrapOrElse(callable $op): mixed
     {
-        return $op($this->err, ...$this->pass);
+        return $op($this->err);
     }
 
     public function apply(Result ...$inArgs): Result
     {
-        return $this;
-    }
-
-    public function with(mixed ...$args): Result
-    {
-        $this->pass = $args;
-
         return $this;
     }
 }

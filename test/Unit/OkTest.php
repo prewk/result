@@ -398,16 +398,4 @@ final class OkTest extends TestCase
         self::assertInstanceOf(Err::class, $result);
         self::assertEquals('Error message', $result->unwrapErr());
     }
-
-    /**
-     * @covers \Prewk\Result\Ok::__construct
-     * @covers \Prewk\Result\Ok::with
-     */
-    public function testWithSetsArguments(): void
-    {
-        $ok = new Ok('value');
-        $args = ['arg1', 'arg2'];
-        $result = $ok->with(...$args);
-        self::assertEquals($args, $result->map(static fn (string $value, ...$args): array => $args)->unwrap());
-    }
 }

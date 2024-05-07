@@ -30,17 +30,10 @@ use function is_string;
  */
 class Ok extends Result
 {
-    /**
-     * @var array<array-key, mixed>
-     */
-    private $pass;
-
     public function __construct(
         /** @var T */
         private $value,
-        mixed ...$pass
     ) {
-        $this->pass = $pass;
     }
 
     /**
@@ -71,17 +64,17 @@ class Ok extends Result
 
     public function map(callable $mapper): Result
     {
-        return new self($mapper($this->value, ...$this->pass), ...$this->pass);
+        return new self($mapper($this->value));
     }
 
     public function mapOr($default, callable $f): mixed
     {
-        return $f($this->value, ...$this->pass);
+        return $f($this->value);
     }
 
     public function mapOrElse(callable $default, callable $f): mixed
     {
-        return $f($this->value, ...$this->pass);
+        return $f($this->value);
     }
 
     public function mapErr(callable $op): Result
@@ -91,7 +84,7 @@ class Ok extends Result
 
     public function inspect(callable $f): Result
     {
-        $f($this->value, ...$this->pass);
+        $f($this->value);
 
         return $this;
     }
@@ -147,7 +140,7 @@ class Ok extends Result
 
     public function andThen(callable $op): Result
     {
-        return $op($this->value, ...$this->pass);
+        return $op($this->value);
     }
 
     public function or(Result $res): Result
@@ -190,12 +183,5 @@ class Ok extends Result
             new self([])
         )
             ->map(fn (array $argArray): mixed => ($this->value)(...$argArray));
-    }
-
-    public function with(mixed ...$args): Result
-    {
-        $this->pass = $args;
-
-        return $this;
     }
 }
