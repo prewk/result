@@ -14,7 +14,6 @@ namespace Prewk;
 use Exception;
 use Prewk\Result\Err;
 use Prewk\Result\Ok;
-use Prewk\Result\ResultException;
 
 /**
  * Describes a Result
@@ -214,14 +213,4 @@ abstract class Result
      * @return T
      */
     abstract public function unwrapOrElse(callable $op): mixed;
-
-    /**
-     * Applies values inside the given Results to the function in this Result.
-     *
-     * @param Result<mixed,E> ...$inArgs Results to apply the function to.
-     * @return Result<mixed,E>
-     *
-     * @throws ResultException
-     */
-    abstract public function apply(self ...$inArgs): self;
 }

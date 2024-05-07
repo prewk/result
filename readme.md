@@ -75,21 +75,6 @@ Add the following to your `composer.json`:
 
 If an Err containing an `Exception` is unwrapped, that Exception will be thrown. Otherwise a generic `ResultException` will be thrown.
 
-### apply
-
-If all results are Ok, give them to the contained callable value as arguments and put the callable's returned value in a new Ok. If any result is an Err, return the first Err.
-
-```php
-$sum = function(int $foo, int $bar): int
-{
-	return $foo + bar;
-}
-
-ok($sum)->apply(ok(100), ok(200), ok(300)); // Ok<600>
-
-ok($sum)->apply(ok(100), ok(200), err(new Exception)); // Err<Exception>
-```
-
 ## Gotchas
 
 Note that `or` and `and` will be evaluated immediately:
