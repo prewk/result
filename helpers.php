@@ -18,12 +18,11 @@ if (! function_exists('ok')) {
      * @template T
      *
      * @param T $value
-     * @param mixed ...$pass
      * @return \Prewk\Result\Ok<T>
      */
-    function ok($value = null, ...$pass): Ok
+    function ok($value = null): Ok
     {
-        return new Ok($value, ...$pass);
+        return new Ok($value);
     }
 }
 
@@ -36,11 +35,10 @@ if (! function_exists('err')) {
      * @template E
      *
      * @param E $err
-     * @param array ...$pass
      * @return \Prewk\Result\Err<E>
      */
-    function err($err, ...$pass): Err
+    function err($err): Err
     {
-        return new Err($err, $pass);
+        return new Err($err);
     }
 }

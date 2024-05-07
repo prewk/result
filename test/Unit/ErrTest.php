@@ -309,16 +309,4 @@ final class ErrTest extends TestCase
         $result = $err->apply(new Err('another error'), new Err('yet another error'));
         self::assertSame($err, $result);
     }
-
-    /**
-     * @covers \Prewk\Result\Err::__construct
-     * @covers \Prewk\Result\Err::with
-     */
-    public function testWithSetsArguments(): void
-    {
-        $err = new Err('error');
-        $args = ['arg1', 'arg2'];
-        $result = $err->with(...$args);
-        self::assertEquals($args, $result->mapErr(static fn (string $err, ...$args): array => $args)->unwrapErr());
-    }
 }

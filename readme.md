@@ -63,11 +63,9 @@ Add the following to your `composer.json`:
 
 ```json
 {
-    "autoload": {
-        "files": [
-            "vendor/prewk/result/helpers.php"
-        ]
-    }
+  "autoload": {
+    "files": ["vendor/prewk/result/helpers.php"]
+  }
 }
 ```
 
@@ -90,17 +88,6 @@ $sum = function(int $foo, int $bar): int
 ok($sum)->apply(ok(100), ok(200), ok(300)); // Ok<600>
 
 ok($sum)->apply(ok(100), ok(200), err(new Exception)); // Err<Exception>
-```
-
-### with
-
-The `with` method will include the variadically added arguments in consecutive closures (`map`, `andThen`, etc). [This is useful when chaining dependent ops](https://github.com/prewk/result/pull/3).
-
-```php
-ok($foo)->with($bar, $baz)
-	->map(function($foo, $bar, $baz) {
-		return $foo . $bar . $baz;
-	});
 ```
 
 ## Gotchas
