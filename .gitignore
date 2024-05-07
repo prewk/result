@@ -1,3 +1,4 @@
-/build/
-vendor
-bin
+/.build/
+/test/*/phpunit.xml
+/vendor/
+/infection.json

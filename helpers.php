@@ -1,11 +1,15 @@
 <?php
+
+use Prewk\Result\Err;
+use Prewk\Result\Ok;
+
 /**
  * Procedural style construction of Result instances
  *
  * @author Oskar Thornblad
  */
 
-if (!function_exists("ok")) {
+if (! function_exists('ok')) {
     /**
      * Represent a successful result
      *
@@ -13,19 +17,17 @@ if (!function_exists("ok")) {
      *
      * @template T
      *
-     * @param mixed $value
-     * @psalm-param T $value
+     * @param T $value
      * @param mixed ...$pass
-     * @return Prewk\Result\Ok
-     * @psalm-return Prewk\Result\Ok<T,mixed>
+     * @return \Prewk\Result\Ok<T>
      */
-    function ok($value = null, ...$pass): Prewk\Result\Ok
+    function ok($value = null, ...$pass): Ok
     {
-        return new Prewk\Result\Ok($value, ...$pass);
+        return new Ok($value, ...$pass);
     }
 }
 
-if (!function_exists("err")) {
+if (! function_exists('err')) {
     /**
      * Represent a failed result
      *
@@ -33,14 +35,12 @@ if (!function_exists("err")) {
      *
      * @template E
      *
-     * @param mixed $err
-     * @psalm-param E $err
+     * @param E $err
      * @param array ...$pass
-     * @return Prewk\Result\Err
-     * @psalm-return Prewk\Result\Err<mixed,E>
+     * @return \Prewk\Result\Err<E>
      */
-    function err($err, ...$pass): Prewk\Result\Err
+    function err($err, ...$pass): Err
     {
-        return new Prewk\Result\Err($err, $pass);
+        return new Err($err, $pass);
     }
 }

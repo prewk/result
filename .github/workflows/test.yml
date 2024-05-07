@@ -8,106 +8,221 @@ on:
     branches:
       - "master"
 
-env:
-  PHP_EXTENSIONS: "curl, dom, json, simplexml, tokenizer, xmlwriter"
-
 jobs:
-  static-code-analysis:
-    name: "Static Code Analysis"
+  code-coverage:
+    name: "Code Coverage"
 
     runs-on: "ubuntu-latest"
+
+    timeout-minutes: 5
 
     strategy:
       matrix:
         php-version:
-          - "8.0"
+          - "8.1"
 
         dependencies:
           - "locked"
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v2.3.4"
+        uses: "actions/checkout@v4.1.4"
 
-      - name: "Install PHP with extensions"
-        uses: "shivammathur/setup-php@2.10.0"
+      - name: "Set up PHP"
+        uses: "shivammathur/setup-php@2.30.4"
         with:
-          coverage: "none"
-          extensions: "${{ env.PHP_EXTENSIONS }}"
+          coverage: "xdebug"
           php-version: "${{ matrix.php-version }}"
 
+      - name: "Set up problem matchers for PHP"
+        run: 'echo "::add-matcher::${{ runner.tool_cache }}/php.json"'
+
+      - name: "Set up problem matchers for phpunit/phpunit"
+        run: 'echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"'
+
       - name: "Install ${{ matrix.dependencies }} dependencies with composer"
-        uses: "ramsey/composer-install@1.3.0"
+        uses: "ramsey/composer-install@3.0.0"
         with:
           dependency-versions: "${{ matrix.dependencies }}"
 
-      - name: "Create cache directory for vimeo/psalm"
-        run: "mkdir -p build/psalm"
+      - name: "Collect code coverage with Xdebug and phpunit/phpunit"
+        env:
+          XDEBUG_MODE: "coverage"
+        run: "vendor/bin/phpunit --colors=always --configuration=test/Unit/phpunit.xml.dist --coverage-clover=.build/phpunit/logs/clover.xml"
 
-      - name: "Cache cache directory for vimeo/psalm"
-        uses: "actions/cache@v2.1.4"
+      - name: "Send code coverage report to Coveralls"
+        uses: "coverallsapp/github-action@v2.2.3"
         with:
-          path: "build/psalm"
-          key: "php-${{ matrix.php-version }}-psalm-${{ github.sha }}"
-          restore-keys: "php-${{ matrix.php-version }}-psalm-"
+          file: ".build/phpunit/logs/clover.xml"
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+          parallel-finished: true
+
+  coding-standards:
+    name: "Coding Standards"
+
+    runs-on: "ubuntu-latest"
+
+    timeout-minutes: 5
+
+    strategy:
+      matrix:
+        php-version:
+          - "8.1"
+
+        dependencies:
+          - "locked"
+
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v4.1.4"
+
+      - name: "Set up PHP"
+        uses: "shivammathur/setup-php@2.30.4"
+        with:
+          coverage: "none"
+          php-version: "${{ matrix.php-version }}"
+
+      - name: "Set up problem matchers for PHP"
+        run: 'echo "::add-matcher::${{ runner.tool_cache }}/php.json"'
+
+      - name: "Install ${{ matrix.dependencies }} dependencies with composer"
+        uses: "ramsey/composer-install@3.0.0"
+        with:
+          dependency-versions: "${{ matrix.dependencies }}"
+
+      - name: "Run ergebnis/composer-normalize"
+        run: "composer normalize --ansi --dry-run"
+
+      - name: "Cache cache directory for easy-coding-standard/easy-coding-standard"
+        uses: "actions/cache@v4.0.2"
+        with:
+          path: ".build/ecs"
+          key: "php-${{ matrix.php-version }}-ecs-${{ github.ref_name }}"
+          restore-keys: |
+            php-${{ matrix.php-version }}-ecs-master
+            php-${{ matrix.php-version }}-ecs-
+
+      - name: "Run easy-coding-standard/easy-coding-standard"
+        run: "vendor/bin/ecs --ansi --config=ecs.php --no-progress-bar --verbose"
+
+  mutation-tests:
+    name: "Mutation Tests"
+
+    runs-on: "ubuntu-latest"
+
+    timeout-minutes: 5
+
+    strategy:
+      matrix:
+        php-version:
+          - "8.1"
+
+        dependencies:
+          - "locked"
+
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v4.1.4"
+
+      - name: "Set up PHP"
+        uses: "shivammathur/setup-php@2.30.4"
+        with:
+          coverage: "xdebug"
+          php-version: "${{ matrix.php-version }}"
+
+      - name: "Set up problem matchers for PHP"
+        run: 'echo "::add-matcher::${{ runner.tool_cache }}/php.json"'
+
+      - name: "Install ${{ matrix.dependencies }} dependencies with composer"
+        uses: "ramsey/composer-install@3.0.0"
+        with:
+          dependency-versions: "${{ matrix.dependencies }}"
+
+      - name: "Run mutation tests with Xdebug and infection/infection"
+        env:
+          XDEBUG_MODE: "coverage"
+        run: "vendor/bin/infection --ansi --configuration=infection.json.dist --logger-github"
+
+  static-code-analysis:
+    name: "Static Code Analysis"
+
+    runs-on: "ubuntu-latest"
+
+    timeout-minutes: 5
+
+    strategy:
+      matrix:
+        php-version:
+          - "8.1"
+
+        dependencies:
+          - "locked"
+
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v4.1.4"
+
+      - name: "Set up PHP"
+        uses: "shivammathur/setup-php@2.30.4"
+        with:
+          coverage: "none"
+          php-version: "${{ matrix.php-version }}"
+
+      - name: "Set up problem matchers for PHP"
+        run: 'echo "::add-matcher::${{ runner.tool_cache }}/php.json"'
+
+      - name: "Install ${{ matrix.dependencies }} dependencies with composer"
+        uses: "ramsey/composer-install@3.0.0"
+        with:
+          dependency-versions: "${{ matrix.dependencies }}"
 
       - name: "Run vimeo/psalm"
-        run: "bin/psalm --config=psalm.xml --diff --show-info=false --stats --threads=4"
+        run: "vendor/bin/psalm --config=psalm.xml --output-format=github --shepherd --show-info=false --stats --threads=4"
 
   tests:
     name: "Tests"
 
     runs-on: "ubuntu-latest"
 
+    timeout-minutes: 5
+
     strategy:
+      fail-fast: false
       matrix:
         php-version:
-          - "7.3"
-          - "7.4"
-          - "8.0"
+          - "8.1"
+          - "8.2"
+          - "8.3"
 
         dependencies:
           - "lowest"
           - "locked"
-          - "highest"
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v2.3.4"
+        uses: "actions/checkout@v4.1.4"
 
-      - name: "Install PHP with extensions"
-        uses: "shivammathur/setup-php@2.10.0"
+      - name: "Set up PHP"
+        uses: "shivammathur/setup-php@2.30.4"
         with:
-          coverage: "xdebug"
-          extensions: "${{ env.PHP_EXTENSIONS }}"
+          coverage: "none"
+          extensions: "none, bcmath, ctype, curl, dom, intl, json, mbstring, phar, simplexml, tokenizer, xml, xmlwriter"
           php-version: "${{ matrix.php-version }}"
 
+      - name: "Set up problem matchers for PHP"
+        run: 'echo "::add-matcher::${{ runner.tool_cache }}/php.json"'
+
+      - name: "Set up problem matchers for phpunit/phpunit"
+        run: 'echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"'
+
+      - name: "Remove platform configuration with composer"
+        if: "matrix.dependencies != 'locked'"
+        run: "composer config platform.php --ansi --unset"
+
       - name: "Install ${{ matrix.dependencies }} dependencies with composer"
-        uses: "ramsey/composer-install@1.3.0"
+        uses: "ramsey/composer-install@3.0.0"
         with:
           dependency-versions: "${{ matrix.dependencies }}"
 
-      - name: "Run specification tests phpspec/phpspec"
-        run: "bin/phpspec run --config=phpspec.yml"
-
-      - name: "Collect the test coverage report using php-coveralls/php-coveralls"
-        env:
-          COVERALLS_REPO_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-          COVERALLS_PARALLEL: true
-          COVERALLS_FLAG_NAME: "${{ github.job }}-PHP-${{ matrix.php-version }} ${{ matrix.dependencies }}"
-        run: "bin/php-coveralls -v"
-
-  code-coverage:
-    name: "Code Coverage"
-
-    needs:
-      - "tests"
-
-    runs-on: "ubuntu-latest"
-
-    steps:
-      - name: "Send code coverage report to Coveralls"
-        uses: "coverallsapp/github-action@v1.1.2"
-        with:
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
-          parallel-finished: true
+      - name: "Run unit tests with phpunit/phpunit"
+        run: "vendor/bin/phpunit --colors=always --configuration=test/Unit/phpunit.xml.dist"

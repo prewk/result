@@ -13,51 +13,35 @@ namespace Prewk\Result;
 
 use Exception;
 use Prewk\Option;
-use Prewk\Option\{Some, None};
+use Prewk\Option\{None, Some};
 use Prewk\Result;
+use Throwable;
 
 /**
  * Err
  *
- * @template T
- * The Ok value
- *
  * @template E
  * The Err value
  *
- * @template-extends Result<T, E>
+ * @extends Result<mixed, E>
  */
 class Err extends Result
 {
     /**
-     * @var mixed
-     * @psalm-var E
-     */
-    private $err;
-
-    /**
-     * @var array
-     * @psalm-var list<mixed>
+     * @var array<array-key, mixed>
      */
     private $pass;
 
-    /**
-     * Err constructor.
-     *
-     * @param mixed $err
-     * @psalm-param E $err
-     * @param mixed ...$pass
-     */
-    public function __construct($err, ...$pass)
-    {
-        $this->err = $err;
+    public function __construct(
+        /** @var E */
+        private $err,
+        mixed ...$pass
+    ) {
         $this->pass = $pass;
     }
 
     /**
-     * Returns true if the result is Ok.
-     *
-     * @return bool
+     * @return false
      */
     public function isOk(): bool
     {
@@ -65,230 +49,132 @@ class Err extends Result
     }
 
     /**
-     * Returns true if the result is Err.
-     *
-     * @return bool
+     * @return true
      */
     public function isErr(): bool
     {
         return true;
     }
 
-    /**
-     * Maps a Result by applying a function to a contained Ok value, leaving an Err value untouched.
-     *
-     * @template U
-     *
-     * @param callable $mapper
-     * @psalm-param callable(T=,mixed...):U $mapper
-     * @return Result
-     * @psalm-return Result<U,E>
-     */
+    public function ok(): Option
+    {
+        return new None();
+    }
+
+    public function err(): Option
+    {
+        return new Some($this->err);
+    }
+
     public function map(callable $mapper): Result
     {
-        return new self($this->err, ...$this->pass);
+        return $this;
     }
 
-    /**
-     * Maps a Result by applying a function to a contained Err value, leaving an Ok value untouched.
-     *
-     * @template F
-     *
-     * @param callable $mapper
-     * @psalm-param callable(E=,mixed...):F $mapper
-     * @return Result
-     * @psalm-return Result<T,F>
-     */
-    public function mapErr(callable $mapper): Result
+    public function mapOr($default, callable $f): mixed
     {
-        return new self($mapper($this->err, ...$this->pass));
+        return $default;
     }
 
-    /**
-     * Returns an iterator over the possibly contained value.
-     * The iterator yields one value if the result is Ok, otherwise none.
-     *
-     * @return array
-     * @psalm-return array<int, T>
-     */
+    public function mapOrElse(callable $default, callable $f): mixed
+    {
+        return $default($this->err, ...$this->pass);
+    }
+
+    public function mapErr(callable $op): Result
+    {
+        return new self($op($this->err, ...$this->pass), ...$this->pass);
+    }
+
+    public function inspect(callable $f): Result
+    {
+        return $this;
+    }
+
+    public function inspectErr(callable $f): Result
+    {
+        $f($this->err, ...$this->pass);
+
+        return $this;
+    }
+
     public function iter(): array
     {
         return [];
     }
 
     /**
-     * Returns res if the result is Ok, otherwise returns the Err value of self.
-     *
-     * @template U
-     *
-     * @param Result $res
-     * @psalm-param Result<U,E> $res
-     * @return Result
-     * @psalm-return Result<U,E>
+     * @throws Exception
      */
-    public function and(Result $res): Result
-    {
-        return new self($this->err, ...$this->pass);
-    }
-
-    /**
-     * Calls op if the result is Ok, otherwise returns the Err value of self.
-     *
-     * @template U
-     *
-     * @param callable $op
-     * @psalm-param callable(T=,mixed...):Result<U,E> $op
-     * @return Result
-     * @psalm-return Result<U,E>
-     */
-    public function andThen(callable $op): Result
-    {
-        return new self($this->err, ...$this->pass);
-    }
-
-    /**
-     * Returns res if the result is Err, otherwise returns the Ok value of self.
-     *
-     * @template F
-     *
-     * @param Result $res
-     * @psalm-param Result<T,F> $res
-     * @return Result
-     * @psalm-return Result<T,F>
-     */
-    public function or(Result $res): Result
-    {
-        return $res;
-    }
-
-    /**
-     * Calls op if the result is Err, otherwise returns the Ok value of self.
-     *
-     * @template F
-     *
-     * @param callable $op
-     * @psalm-param callable(E=,mixed...):Result<T,F> $op
-     * @return Result
-     * @psalm-return Result<T,F>
-     *
-     * @psalm-assert !callable(T=):Result $op
-     */
-    public function orElse(callable $op): Result
-    {
-        return $op($this->err, ...$this->pass);
-    }
-
-    /**
-     * Unwraps a result, yielding the content of an Ok. Else, it returns optb.
-     *
-     * @param mixed $optb
-     * @psalm-param T $optb
-     * @return mixed
-     * @psalm-return T
-     */
-    public function unwrapOr($optb)
-    {
-        return $optb;
-    }
-
-    /**
-     * Unwraps a result, yielding the content of an Ok. If the value is an Err then it calls op with its value.
-     *
-     * @param callable $op
-     * @psalm-param callable(E=,mixed...):T $op
-     * @return mixed
-     * @psalm-return T
-     */
-    public function unwrapOrElse(callable $op)
-    {
-        return $op($this->err, ...$this->pass);
-    }
-
-    /**
-     * Unwraps a result, yielding the content of an Ok.
-     *
-     * @return void
-     * @psalm-return never-return
-     * @throws Exception if the value is an Err.
-     */
-    public function unwrap()
-    {
-        if ($this->err instanceof Exception) {
-            throw $this->err;
-        }
-
-        throw new ResultException("Unwrapped an Err");
-    }
-
-    /**
-     * Unwraps a result, yielding the content of an Ok.
-     *
-     * @template X as Exception
-     *
-     * @param Exception $msg
-     * @psalm-param X&Exception $msg
-     * @return void
-     * @psalm-return never-return
-     * @throws Exception the message if the value is an Err.
-     */
-    public function expect(Exception $msg)
+    public function expect(Exception $msg): never
     {
         throw $msg;
     }
 
     /**
-     * Unwraps a result, yielding the content of an Err.
-     *
-     * @return mixed
-     * @psalm-return E
+     * @throws Throwable
      */
-    public function unwrapErr()
+    public function unwrap(): never
+    {
+        if ($this->err instanceof Throwable) {
+            throw $this->err;
+        }
+
+        throw new ResultException('Unwrapped an Err');
+    }
+
+    /**
+     * @return E
+     */
+    public function expectErr(Exception $msg): mixed
     {
         return $this->err;
     }
 
     /**
-     * Applies values inside the given Results to the function in this Result.
-     *
-     * @param Result ...$inArgs Results to apply the function to.
-     * @return Result
-     * @psalm-return Result<mixed,E>
+     * @return E
      */
+    public function unwrapErr(): mixed
+    {
+        return $this->err;
+    }
+
+    public function and(Result $res): Result
+    {
+        return $this;
+    }
+
+    public function andThen(callable $op): Result
+    {
+        return $this;
+    }
+
+    public function or(Result $res): Result
+    {
+        return $res;
+    }
+
+    public function orElse(callable $op): Result
+    {
+        return $op($this->err, ...$this->pass);
+    }
+
+    public function unwrapOr($optb): mixed
+    {
+        return $optb;
+    }
+
+    public function unwrapOrElse(callable $op): mixed
+    {
+        return $op($this->err, ...$this->pass);
+    }
+
     public function apply(Result ...$inArgs): Result
     {
         return $this;
     }
 
-    /**
-     * Converts from Result<T, E> to Option<T>, and discarding the error, if any
-     *
-     * @return Option
-     * @psalm-return Option<T>
-     */
-    public function ok(): Option
-    {
-        return new None;
-    }
-
-    /**
-     * Converts from Result<T, E> to Option<E>, and discarding the value, if any
-     *
-     * @return Option
-     * @psalm-return Option<E>
-     */
-    public function err(): Option
-    {
-        return new Some($this->err);
-    }
-
-    /**
-     * The attached pass-through args will be unpacked into extra args into chained callables
-     *
-     * @param mixed ...$args
-     * @return Result
-     * @psalm-return Result<T,E>
-     */
-    public function with(...$args): Result
+    public function with(mixed ...$args): Result
     {
         $this->pass = $args;
 

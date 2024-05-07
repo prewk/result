@@ -12,6 +12,8 @@ declare(strict_types=1);
 namespace Prewk;
 
 use Exception;
+use Prewk\Result\Err;
+use Prewk\Result\Ok;
 use Prewk\Result\ResultException;
 
 /**
@@ -28,30 +30,30 @@ abstract class Result
     /**
      * Returns true if the result is Ok.
      *
-     * @return bool
+     * @psalm-assert-if-true Ok<T> $this
+     * @psalm-assert-if-false Err<E> $this
      */
     abstract public function isOk(): bool;
 
     /**
      * Returns true if the result is Err.
      *
-     * @return bool
+     * @psalm-assert-if-true Err<E> $this
+     * @psalm-assert-if-false Ok<T> $this
      */
     abstract public function isErr(): bool;
 
     /**
      * Converts from Result<T, E> to Option<T>, and discarding the error, if any
      *
-     * @return Option
-     * @psalm-return Option<T>
+     * @return Option<T>
      */
     abstract public function ok(): Option;
 
     /**
      * Converts from Result<T, E> to Option<E>, and discarding the value, if any
      *
-     * @return Option
-     * @psalm-return Option<E>
+     * @return Option<E>
      */
     abstract public function err(): Option;
 
@@ -60,148 +62,173 @@ abstract class Result
      *
      * @template U
      *
-     * @param callable $mapper
-     * @psalm-param callable(T=,mixed...):U $mapper
-     * @return Result
-     * @psalm-return Result<U,E>
+     * @param callable(T=,mixed...):U $mapper
+     * @return Result<U,E>
      */
-    abstract public function map(callable $mapper): Result;
+    abstract public function map(callable $mapper): self;
+
+    /**
+     * Returns the provided default (if Err), or applies a function to the contained value (if Ok).
+     *
+     * @template U
+     *
+     * @param U $default
+     * @param callable(T=,mixed...):U $f
+     *
+     * @return U
+     */
+    abstract public function mapOr($default, callable $f): mixed;
+
+    /**
+     * Maps a Result<T, E> to U by applying fallback function default to a contained Err value, or function f to a contained Ok value.
+     *
+     * @template U
+     *
+     * @param callable(E=,mixed...):U $default
+     * @param callable(T=,mixed...):U $f
+     *
+     * @return U
+     */
+    abstract public function mapOrElse(callable $default, callable $f): mixed;
 
     /**
      * Maps a Result by applying a function to a contained Err value, leaving an Ok value untouched.
      *
      * @template F
      *
-     * @param callable $mapper
-     * @psalm-param callable(E=,mixed...):F $mapper
-     * @return Result
-     * @psalm-return Result<T,F>
+     * @param callable(E=,mixed...):F $op
+     * @return Result<T,F>
      */
-    abstract public function mapErr(callable $mapper): Result;
+    abstract public function mapErr(callable $op): self;
+
+    /**
+     * Calls a function with a reference to the contained value if Ok.
+     *
+     * @param callable(T=,mixed...):void $f
+     *
+     * @return Result<T,E>
+     */
+    abstract public function inspect(callable $f): self;
+
+    /**
+     * Calls a function with a reference to the contained value if Err.
+     *
+     * @param callable(E=,mixed...):void $f
+     *
+     * @return Result<T,E>
+     */
+    abstract public function inspectErr(callable $f): self;
 
     /**
      * Returns an iterator over the possibly contained value.
      * The iterator yields one value if the result is Ok, otherwise none.
      *
-     * @return array
-     * @psalm-return array<int, T>
+     * @return list<T>
      */
     abstract public function iter(): array;
+
+    /**
+     * Unwraps a result, yielding the content of an Ok.
+     *
+     * @return T
+     * @throws Exception the message if the value is an Err.
+     */
+    abstract public function expect(Exception $msg): mixed;
+
+    /**
+     * Unwraps a result, yielding the content of an Ok.
+     *
+     * @return T
+     * @throws Exception if the value is an Err.
+     */
+    abstract public function unwrap(): mixed;
+
+    /**
+     * Returns the contained Err value, consuming the self value.
+     *
+     * @return E
+     * @throws Exception if the value is an Ok.
+     */
+    abstract public function expectErr(Exception $msg): mixed;
+
+    /**
+     * Unwraps a result, yielding the content of an Err.
+     *
+     * @return E
+     * @throws Exception if the value is an Ok.
+     */
+    abstract public function unwrapErr(): mixed;
 
     /**
      * Returns res if the result is Ok, otherwise returns the Err value of self.
      *
      * @template U
      *
-     * @param Result $res
-     * @psalm-param Result<U,E> $res
-     * @return Result
-     * @psalm-return Result<U,E>
+     * @param Result<U,E> $res
+     * @return Result<U,E>
      */
-    abstract public function and(Result $res): Result;
+    abstract public function and(self $res): self;
 
     /**
      * Calls op if the result is Ok, otherwise returns the Err value of self.
      *
      * @template U
      *
-     * @param callable $op
-     * @psalm-param callable(T=,mixed...):Result<U,E> $op
-     * @return Result
-     * @psalm-return Result<U,E>
+     * @param callable(T=,mixed...):Result<U,E> $op
+     * @return Result<U,E>
      */
-    abstract public function andThen(callable $op): Result;
+    abstract public function andThen(callable $op): self;
 
     /**
      * Returns res if the result is Err, otherwise returns the Ok value of self.
      *
      * @template F
      *
-     * @param Result $res
-     * @psalm-param Result<T,F> $res
-     * @return Result
-     * @psalm-return Result<T,F>
+     * @param Result<T,F> $res
+     * @return Result<T,F>
      */
-    abstract public function or(Result $res): Result;
+    abstract public function or(self $res): self;
 
     /**
      * Calls op if the result is Err, otherwise returns the Ok value of self.
      *
      * @template F
      *
-     * @param callable $op
-     * @psalm-param callable(E=,mixed...):Result<T,F> $op
-     * @return Result
-     * @psalm-return Result<T,F>
+     * @param callable(E=,mixed...):Result<T,F> $op
+     * @return Result<T,F>
      */
-    abstract public function orElse(callable $op): Result;
+    abstract public function orElse(callable $op): self;
 
     /**
      * Unwraps a result, yielding the content of an Ok. Else, it returns optb.
      *
-     * @param mixed $optb
-     * @psalm-param T $optb
-     * @return mixed
-     * @psalm-return T
+     * @param T $optb
+     * @return T
      */
-    abstract public function unwrapOr($optb);
+    abstract public function unwrapOr($optb): mixed;
 
     /**
      * Unwraps a result, yielding the content of an Ok. If the value is an Err then it calls op with its value.
      *
-     * @param callable $op
-     * @psalm-param callable(E=,mixed...):T $op
-     * @return mixed
-     * @psalm-return T
+     * @param callable(E=,mixed...):T $op
+     * @return T
      */
-    abstract public function unwrapOrElse(callable $op);
-
-    /**
-     * Unwraps a result, yielding the content of an Ok.
-     *
-     * @return mixed
-     * @psalm-return T
-     * @throws Exception if the value is an Err.
-     */
-    abstract public function unwrap();
-
-    /**
-     * Unwraps a result, yielding the content of an Ok.
-     *
-     * @template X as Exception
-     *
-     * @param Exception $msg
-     * @psalm-param X&Exception $msg
-     * @return mixed
-     * @psalm-return T
-     * @throws Exception the message if the value is an Err.
-     */
-    abstract public function expect(Exception $msg);
-
-    /**
-     * Unwraps a result, yielding the content of an Err.
-     *
-     * @return mixed
-     * @psalm-return E
-     * @throws ResultException if the value is an Ok.
-     */
-    abstract public function unwrapErr();
+    abstract public function unwrapOrElse(callable $op): mixed;
 
     /**
      * Applies values inside the given Results to the function in this Result.
      *
-     * @param Result ...$inArgs Results to apply the function to.
-     * @return Result
-     * @psalm-return Result<mixed,E>
+     * @param Result<mixed,E> ...$inArgs Results to apply the function to.
+     * @return Result<mixed,E>
+     *
+     * @throws ResultException
      */
-    abstract public function apply(Result ...$inArgs): Result;
+    abstract public function apply(self ...$inArgs): self;
 
     /**
      * The attached pass-through args will be unpacked into extra args into chained callables
      *
-     * @param mixed ...$args
-     * @return Result
-     * @psalm-return Result<T,E>
+     * @return Result<T,E>
      */
-    abstract public function with(...$args): Result;
+    abstract public function with(mixed ...$args): self;
 }
