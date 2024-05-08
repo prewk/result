@@ -161,9 +161,4 @@ class Err extends Result
     {
         return $op($this->err);
     }
-
-    public function apply(Result ...$inArgs): Result
-    {
-        return $this;
-    }
 }

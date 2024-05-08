@@ -297,16 +297,4 @@ final class ErrTest extends TestCase
         $newErrorMessage = 'new error';
         self::assertEquals($newErrorMessage, $err->unwrapOrElse(static fn () => $newErrorMessage));
     }
-
-    /**
-     * @covers \Prewk\Result\Err::__construct
-     * @covers \Prewk\Result\Err::apply
-     */
-    public function testApplyReturnsSelf(): void
-    {
-        /** @var Err<string> */
-        $err = new Err('error');
-        $result = $err->apply(new Err('another error'), new Err('yet another error'));
-        self::assertSame($err, $result);
-    }
 }

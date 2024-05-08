@@ -17,7 +17,6 @@ use Prewk\Option\{None, Some};
 use Prewk\Result;
 use Stringable;
 use Throwable;
-use function array_reduce;
 use function is_string;
 
 /**
@@ -161,27 +160,5 @@ class Ok extends Result
     public function unwrapOrElse(callable $op): mixed
     {
         return $this->value;
-    }
-
-    public function apply(Result ...$inArgs): Result
-    {
-        if (! is_callable($this->value)) {
-            throw new ResultException('Tried to apply a non-callable to arguments');
-        }
-
-        return array_reduce(
-            $inArgs,
-            static fn (Result $final, Result $argResult): Result => $final->andThen(
-                static fn (array $outArgs): Result => $argResult->map(static function (mixed $unwrappedArg) use (
-                    $outArgs
-                ): array {
-                    $outArgs[] = $unwrappedArg;
-
-                    return $outArgs;
-                })
-            ),
-            new self([])
-        )
-            ->map(fn (array $argArray): mixed => ($this->value)(...$argArray));
     }
 }

@@ -1,14 +1,2 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="5.24.0@462c80e31c34e58cc4f750c656be3927e80e550e">
-  <file src="src/Result/Ok.php">
-    <MixedArgumentTypeCoercion>
-      <code><![CDATA[fn (array $argArray): mixed => ($this->value)(...$argArray)]]></code>
-    </MixedArgumentTypeCoercion>
-    <MixedAssignment>
-      <code><![CDATA[$outArgs[]]]></code>
-    </MixedAssignment>
-    <MixedFunctionCall>
-      <code><![CDATA[($this->value)(...$argArray)]]></code>
-    </MixedFunctionCall>
-  </file>
-</files>
+<files psalm-version="5.24.0@462c80e31c34e58cc4f750c656be3927e80e550e"/>
