@@ -51,7 +51,7 @@ jobs:
         run: "vendor/bin/phpunit --colors=always --configuration=test/Unit/phpunit.xml.dist --coverage-clover=.build/phpunit/logs/clover.xml"
 
       - name: "Send code coverage report to Coveralls"
-        uses: "coverallsapp/github-action@v2.2.3"
+        uses: "coverallsapp/github-action@v2.3.0"
         with:
           file: ".build/phpunit/logs/clover.xml"
           github-token: "${{ secrets.GITHUB_TOKEN }}"
