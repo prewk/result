@@ -27,7 +27,7 @@ use function is_string;
  *
  * @extends Result<T, mixed>
  */
-class Ok extends Result
+final class Ok extends Result
 {
     public function __construct(
         /** @var T */

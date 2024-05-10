@@ -25,7 +25,7 @@ use Throwable;
  *
  * @extends Result<mixed, E>
  */
-class Err extends Result
+final class Err extends Result
 {
     public function __construct(
         /** @var E */
