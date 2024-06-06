@@ -4,7 +4,7 @@ A PHP implementation of [Rust's Result type](https://doc.rust-lang.org/std/resul
 
 ## Version information
 
-Version 3.x.x requires PHP 7.3+. Make sure you match the versions for this and the [Option](https://github.com/prewk/option) library if you use both.
+Version 4.x.x requires PHP 8.1.0+. Make sure you match the versions for this and the [Option](https://github.com/prewk/option) library if you use both.
 
 ## Installation
 
