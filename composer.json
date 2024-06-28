@@ -16,7 +16,7 @@
     "require-dev": {
         "ergebnis/composer-normalize": "2.42.0",
         "infection/infection": "0.27.11",
-        "phpunit/phpunit": "10.5.15",
+        "phpunit/phpunit": "10.5.24",
         "psalm/plugin-phpunit": "0.19.0",
         "symplify/easy-coding-standard": "12.1.14",
         "vimeo/psalm": "5.24.0"
