@@ -61,7 +61,7 @@ abstract class Result
      *
      * @template U
      *
-     * @param callable(T=):U $mapper
+     * @param callable(T):U $mapper
      * @return Result<U,E>
      */
     abstract public function map(callable $mapper): self;
@@ -72,7 +72,7 @@ abstract class Result
      * @template U
      *
      * @param U $default
-     * @param callable(T=):U $f
+     * @param callable(T):U $f
      *
      * @return U
      */
@@ -83,8 +83,8 @@ abstract class Result
      *
      * @template U
      *
-     * @param callable(E=):U $default
-     * @param callable(T=):U $f
+     * @param callable(E):U $default
+     * @param callable(T):U $f
      *
      * @return U
      */
@@ -95,7 +95,7 @@ abstract class Result
      *
      * @template F
      *
-     * @param callable(E=):F $op
+     * @param callable(E):F $op
      * @return Result<T,F>
      */
     abstract public function mapErr(callable $op): self;
@@ -103,7 +103,7 @@ abstract class Result
     /**
      * Calls a function with a reference to the contained value if Ok.
      *
-     * @param callable(T=):void $f
+     * @param callable(T):void $f
      *
      * @return Result<T,E>
      */
@@ -112,7 +112,7 @@ abstract class Result
     /**
      * Calls a function with a reference to the contained value if Err.
      *
-     * @param callable(E=):void $f
+     * @param callable(E):void $f
      *
      * @return Result<T,E>
      */
@@ -172,9 +172,10 @@ abstract class Result
      * Calls op if the result is Ok, otherwise returns the Err value of self.
      *
      * @template U
+     * @template F
      *
-     * @param callable(T=):Result<U,E> $op
-     * @return Result<U,E>
+     * @param callable(T):Result<U,F> $op
+     * @return Result<U,E|F>
      */
     abstract public function andThen(callable $op): self;
 
@@ -191,26 +192,31 @@ abstract class Result
     /**
      * Calls op if the result is Err, otherwise returns the Ok value of self.
      *
+     * @template U
      * @template F
      *
-     * @param callable(E=):Result<T,F> $op
-     * @return Result<T,F>
+     * @param callable(E):Result<U,F> $op
+     * @return Result<T|U,F>
      */
     abstract public function orElse(callable $op): self;
 
     /**
      * Unwraps a result, yielding the content of an Ok. Else, it returns optb.
      *
-     * @param T $optb
-     * @return T
+     * @template U
+     *
+     * @param U $optb
+     * @return T|U
      */
     abstract public function unwrapOr($optb): mixed;
 
     /**
      * Unwraps a result, yielding the content of an Ok. If the value is an Err then it calls op with its value.
      *
-     * @param callable(E=):T $op
-     * @return T
+     * @template U
+     *
+     * @param callable(E):U $op
+     * @return T|U
      */
     abstract public function unwrapOrElse(callable $op): mixed;
 }

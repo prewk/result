@@ -94,7 +94,7 @@ jobs:
         run: "composer normalize --ansi --dry-run"
 
       - name: "Cache cache directory for easy-coding-standard/easy-coding-standard"
-        uses: "actions/cache@v4.0.2"
+        uses: "actions/cache@v4"
         with:
           path: ".build/ecs"
           key: "php-${{ matrix.php-version }}-ecs-${{ github.ref_name }}"
