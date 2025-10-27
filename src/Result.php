@@ -18,10 +18,10 @@ use Prewk\Result\Ok;
 /**
  * Describes a Result
  *
- * @template T
+ * @template-covariant T
  * The Ok value
  *
- * @template E
+ * @template-covariant E
  * The Err value
  */
 abstract class Result

@@ -20,7 +20,7 @@ use Throwable;
 /**
  * Err
  *
- * @template E
+ * @template-covariant E
  * The Err value
  *
  * @extends Result<mixed, E>

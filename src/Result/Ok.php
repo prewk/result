@@ -17,12 +17,13 @@ use Prewk\Option\{None, Some};
 use Prewk\Result;
 use Stringable;
 use Throwable;
+
 use function is_string;
 
 /**
  * Ok
  *
- * @template T
+ * @template-covariant T
  * The Ok value
  *
  * @extends Result<T, mixed>
