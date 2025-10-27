@@ -17,7 +17,6 @@ use Prewk\Option\{None, Some};
 use Prewk\Result;
 use Stringable;
 use Throwable;
-
 use function is_string;
 
 /**
